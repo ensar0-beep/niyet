@@ -1,0 +1,1783 @@
+<title>Niyet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..400&display=swap">
+<style>
+:root{
+  --page-bg:#DEDFE9;
+  --ground:#ECEDF2;
+  --surface:#FBFBFE;
+  --surface-2:#F3F3F9;
+  --ink:#1B1D33;
+  --ink-2:#4E5070;
+  --ink-3:#83859E;
+  --line:#DEDFE9;
+  --line-2:#E9E9F1;
+  --accent:#B87C34;
+  --accent-glow:rgba(184,124,52,.22);
+  --accent-soft:rgba(184,124,52,.12);
+  --plan:#6B6AA6;
+  --plan-soft:rgba(107,106,166,.11);
+  --shadow:0 1px 2px rgba(27,29,51,.05), 0 12px 32px rgba(27,29,51,.07);
+  --shadow-lift:0 2px 4px rgba(27,29,51,.06), 0 20px 48px rgba(27,29,51,.12);
+  --r-card:20px;
+  --r-sm:12px;
+  --font-ui:"Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --font-display:"Newsreader",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --page-bg:#07080F;
+    --ground:#101223;
+    --surface:#191B31;
+    --surface-2:#20223A;
+    --ink:#EDEDF5;
+    --ink-2:#A9ABC6;
+    --ink-3:#75779A;
+    --line:#2A2C47;
+    --line-2:#23253D;
+    --accent:#E0A45C;
+    --accent-glow:rgba(224,164,92,.30);
+    --accent-soft:rgba(224,164,92,.14);
+    --plan:#9A98D8;
+    --plan-soft:rgba(154,152,216,.14);
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 32px rgba(0,0,0,.35);
+    --shadow-lift:0 2px 4px rgba(0,0,0,.35), 0 20px 48px rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"]{
+  --page-bg:#07080F;
+  --ground:#101223;
+  --surface:#191B31;
+  --surface-2:#20223A;
+  --ink:#EDEDF5;
+  --ink-2:#A9ABC6;
+  --ink-3:#75779A;
+  --line:#2A2C47;
+  --line-2:#23253D;
+  --accent:#E0A45C;
+  --accent-glow:rgba(224,164,92,.30);
+  --accent-soft:rgba(224,164,92,.14);
+  --plan:#9A98D8;
+  --plan-soft:rgba(154,152,216,.14);
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 32px rgba(0,0,0,.35);
+  --shadow-lift:0 2px 4px rgba(0,0,0,.35), 0 20px 48px rgba(0,0,0,.5);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--page-bg);
+  color:var(--ink);
+  font-family:var(--font-ui);
+  font-size:15px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;color:inherit;border:none;background:none;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+/* ---------- Prototype chrome ---------- */
+.stage{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:0 16px;
+  padding-block:28px 40px;
+  gap:20px;
+}
+.proto-head{
+  width:100%;
+  max-width:900px;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:baseline;
+  gap:8px 14px;
+}
+.proto-head h1{
+  font-family:var(--font-display);
+  font-size:20px;
+  font-weight:500;
+  margin:0;
+  letter-spacing:.01em;
+}
+.proto-head p{
+  margin:0;
+  font-size:12.5px;
+  color:var(--ink-3);
+  flex:1 1 240px;
+}
+.proto-head .reset{
+  font-size:12px;
+  font-weight:600;
+  color:var(--ink-2);
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:5px 12px;
+  background:var(--surface);
+}
+.rail{
+  width:100%;
+  max-width:900px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.rail button{
+  font-size:11.5px;
+  font-weight:600;
+  letter-spacing:.02em;
+  padding:5px 11px;
+  border-radius:999px;
+  color:var(--ink-3);
+  border:1px solid transparent;
+  background:transparent;
+}
+.rail button:hover{color:var(--ink);background:var(--surface)}
+.rail button[aria-current="true"]{
+  color:var(--ink);
+  background:var(--surface);
+  border-color:var(--line);
+}
+
+/* ---------- Phone ---------- */
+.phone{
+  width:390px;
+  height:844px;
+  max-width:100%;
+  background:var(--ground);
+  border-radius:44px;
+  box-shadow:var(--shadow-lift), 0 0 0 10px var(--ink), 0 0 0 11px rgba(255,255,255,.06);
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  flex:0 0 auto;
+}
+.notch{
+  position:absolute;top:10px;left:50%;transform:translateX(-50%);
+  width:112px;height:28px;border-radius:999px;background:var(--ink);z-index:60;
+}
+.statusbar{
+  height:52px;flex:0 0 auto;display:flex;align-items:flex-end;
+  justify-content:space-between;padding:0 28px 6px;
+  font-size:12.5px;font-weight:600;color:var(--ink);z-index:50;
+}
+.statusbar .dots{display:flex;gap:4px;align-items:center;opacity:.85}
+.statusbar .dots span{width:4px;height:4px;border-radius:50%;background:currentColor}
+.statusbar .bat{width:20px;height:10px;border:1.3px solid currentColor;border-radius:3px;position:relative;opacity:.85}
+.statusbar .bat::after{content:"";position:absolute;inset:1.5px;right:5px;background:currentColor;border-radius:1px}
+
+.viewport{position:relative;flex:1;overflow:hidden}
+.screen{
+  position:absolute;inset:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  display:none;
+  flex-direction:column;
+  -webkit-overflow-scrolling:touch;
+}
+.screen.on{display:flex;animation:enter .34s cubic-bezier(.22,.7,.3,1)}
+@keyframes enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.pad{padding:0 24px}
+.screen-body{flex:1;padding-bottom:24px}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001s!important;transition-duration:.001s!important}
+}
+
+/* ---------- Type ---------- */
+.eyebrow{
+  font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);
+}
+.display{
+  font-family:var(--font-display);
+  font-weight:400;
+  font-size:30px;
+  line-height:1.18;
+  letter-spacing:-.012em;
+  text-wrap:balance;
+  margin:0;
+}
+.display.sm{font-size:23px}
+.lede{font-size:15px;line-height:1.6;color:var(--ink-2);margin:0}
+.tiny{font-size:12.5px;line-height:1.5;color:var(--ink-3);margin:0}
+.num{font-family:var(--font-display);font-variant-numeric:tabular-nums;font-weight:400}
+
+/* ---------- Buttons ---------- */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:16px;border-radius:16px;
+  font-size:15px;font-weight:700;letter-spacing:.005em;
+  background:var(--ink);color:var(--ground);
+  transition:transform .16s ease, opacity .16s ease;
+}
+.btn:active{transform:scale(.98)}
+.btn[disabled]{opacity:.35;cursor:default}
+.btn.ghost{background:transparent;color:var(--ink-2);font-weight:600}
+.btn.outline{background:transparent;color:var(--ink);border:1.3px solid var(--line);}
+.btn.amber{background:var(--accent);color:#fff}
+.btn.sm{padding:11px 16px;font-size:13.5px;width:auto;border-radius:12px}
+.footer-cta{padding:14px 24px 28px;flex:0 0 auto;display:flex;flex-direction:column;gap:6px}
+
+/* ---------- Cards ---------- */
+.card{
+  background:var(--surface);
+  border-radius:var(--r-card);
+  padding:20px;
+  box-shadow:var(--shadow);
+}
+.card.flat{box-shadow:none;border:1px solid var(--line-2)}
+.row{display:flex;align-items:center;gap:12px}
+.between{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.stack{display:flex;flex-direction:column}
+
+/* ---------- Constellation ---------- */
+.field{display:flex;flex-wrap:wrap;gap:9px}
+.node{
+  width:14px;height:14px;border-radius:50%;
+  border:1.4px solid var(--line);
+  background:transparent;
+  flex:0 0 auto;
+  transition:all .4s cubic-bezier(.22,.7,.3,1);
+}
+:root[data-theme="dark"] .node,
+:root:not([data-theme="light"]) .node{border-color:#34375A}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .node{border-color:var(--line)}}
+.node.planned{border-color:var(--plan);border-style:dashed;background:var(--plan-soft)}
+.node.done{
+  border-color:transparent;
+  background:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-glow), 0 0 12px var(--accent-glow);
+}
+.node.lg{width:20px;height:20px;border-width:1.6px}
+.node.lg.done{box-shadow:0 0 0 4px var(--accent-glow), 0 0 18px var(--accent-glow)}
+@keyframes ignite{
+  0%{transform:scale(.4);opacity:0}
+  55%{transform:scale(1.35)}
+  100%{transform:scale(1);opacity:1}
+}
+.node.igniting{animation:ignite .7s cubic-bezier(.22,.7,.3,1) both}
+
+/* ---------- Tab bar ---------- */
+.tabbar{
+  flex:0 0 auto;
+  display:flex;
+  border-top:1px solid var(--line-2);
+  background:color-mix(in srgb, var(--ground) 86%, transparent);
+  backdrop-filter:blur(12px);
+  padding:8px 12px 26px;
+}
+.tabbar button{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:6px 0;font-size:10.5px;font-weight:700;letter-spacing:.03em;
+  color:var(--ink-3);
+}
+.tabbar button[aria-current="true"]{color:var(--ink)}
+.tabbar svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- App header ---------- */
+.apphead{padding:6px 24px 18px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.apphead .dates{display:flex;flex-direction:column;gap:1px}
+.apphead .g{font-family:var(--font-display);font-size:19px;line-height:1.2}
+.apphead .h{font-size:12px;color:var(--ink-3);font-weight:500}
+.iconbtn{
+  width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  background:var(--surface);box-shadow:var(--shadow);color:var(--ink-2);flex:0 0 auto;
+}
+.iconbtn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round}
+
+/* ---------- Specific bits ---------- */
+.hero-next{
+  background:var(--surface);
+  border-radius:var(--r-card);
+  padding:22px;
+  box-shadow:var(--shadow);
+  position:relative;
+  overflow:hidden;
+}
+.hero-next::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 90% at 100% 0%, var(--accent-soft), transparent 62%);
+  pointer-events:none;
+}
+.hero-next > *{position:relative}
+.threshold{display:flex;gap:0;border-top:1px solid var(--line-2);margin-top:18px;padding-top:14px}
+.threshold div{flex:1;display:flex;flex-direction:column;gap:2px}
+.threshold .lbl{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+.threshold .val{font-family:var(--font-display);font-size:19px;font-variant-numeric:tabular-nums}
+
+.stepper{display:flex;align-items:center;justify-content:center;gap:26px}
+.stepper .pm{
+  width:52px;height:52px;border-radius:50%;background:var(--surface);box-shadow:var(--shadow);
+  display:grid;place-items:center;font-size:24px;font-weight:400;color:var(--ink-2);
+  font-family:var(--font-display);
+}
+.stepper .pm:active{transform:scale(.94)}
+.stepper .big{
+  font-family:var(--font-display);font-size:76px;line-height:1;font-variant-numeric:tabular-nums;
+  min-width:112px;text-align:center;font-weight:300;letter-spacing:-.02em;
+}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  padding:9px 14px;border-radius:999px;border:1.2px solid var(--line);
+  font-size:13px;font-weight:600;color:var(--ink-2);background:var(--surface);
+}
+.chip[aria-pressed="true"]{border-color:var(--ink);color:var(--ink);background:var(--surface)}
+
+.pace{
+  width:100%;text-align:left;padding:16px 18px;border-radius:16px;
+  background:var(--surface);border:1.4px solid transparent;box-shadow:var(--shadow);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.pace[aria-pressed="true"]{border-color:var(--accent)}
+.pace .t{font-weight:700;font-size:14.5px}
+.pace .s{font-size:12.5px;color:var(--ink-3);margin-top:2px}
+.pace .when{font-family:var(--font-display);font-size:13.5px;color:var(--ink-2);text-align:right;flex:0 0 auto;max-width:42%}
+.badge-rec{
+  font-size:9.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--accent);background:var(--accent-soft);padding:3px 7px;border-radius:5px;margin-left:7px;
+  vertical-align:1px;
+}
+
+.daystrip{display:flex;gap:8px;overflow-x:auto;padding:4px 24px 12px;scrollbar-width:none}
+.daystrip::-webkit-scrollbar{display:none}
+.day{
+  flex:0 0 auto;width:58px;padding:12px 0 11px;border-radius:14px;
+  background:var(--surface);box-shadow:var(--shadow);border:1.4px solid transparent;
+  display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;
+}
+.day .dw{font-size:10.5px;font-weight:700;letter-spacing:.04em;color:var(--ink-3);text-transform:uppercase}
+.day .dd{font-family:var(--font-display);font-size:22px;line-height:1.1;font-variant-numeric:tabular-nums}
+.day[aria-pressed="true"]{border-color:var(--plan);background:var(--plan-soft)}
+.day .mark{width:4px;height:4px;border-radius:50%;background:var(--accent);position:absolute;bottom:7px}
+.day.taken{opacity:.4}
+
+.member{display:flex;align-items:center;gap:12px;padding:13px 0}
+.member + .member{border-top:1px solid var(--line-2)}
+.av{
+  width:34px;height:34px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;
+  font-size:12.5px;font-weight:700;color:var(--ink-2);background:var(--surface-2);
+  border:1px solid var(--line-2);
+}
+.av.me{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.member .nm{font-weight:600;font-size:14px;flex:1;min-width:0}
+.member .pg{display:flex;gap:5px;align-items:center;flex:0 0 auto}
+.pips{display:flex;gap:4px}
+.pip{width:8px;height:8px;border-radius:50%;border:1.3px solid var(--line);}
+.pip.on{background:var(--accent);border-color:transparent;box-shadow:0 0 0 2px var(--accent-glow)}
+
+.nudge{
+  display:flex;gap:9px;align-items:flex-start;padding:13px 15px;border-radius:14px;
+  background:var(--plan-soft);
+}
+.nudge .qt{font-size:13.5px;line-height:1.45;color:var(--ink-2)}
+
+.privacy{
+  display:flex;gap:10px;align-items:flex-start;padding:14px 15px;border-radius:14px;
+  border:1px dashed var(--line);
+}
+.privacy svg{width:16px;height:16px;stroke:var(--ink-3);fill:none;stroke-width:1.6;flex:0 0 auto;margin-top:2px}
+
+.sheet-scrim{
+  position:absolute;inset:0;background:rgba(16,18,35,.42);backdrop-filter:blur(3px);
+  z-index:70;display:none;align-items:flex-end;
+}
+.sheet-scrim.on{display:flex;animation:fade .26s ease both}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.sheet{
+  width:100%;background:var(--ground);border-radius:28px 28px 0 0;
+  padding:10px 0 30px;max-height:88%;overflow-y:auto;
+  animation:up .34s cubic-bezier(.22,.7,.3,1) both;
+}
+@keyframes up{from{transform:translateY(30px)}to{transform:none}}
+.grab{width:38px;height:4px;border-radius:999px;background:var(--line);margin:0 auto 16px}
+
+.moment{
+  position:absolute;inset:0;z-index:80;display:none;
+  flex-direction:column;align-items:center;justify-content:center;gap:0;
+  background:var(--ground);padding:0 34px;text-align:center;
+}
+.moment.on{display:flex;animation:fade .4s ease both}
+.moment .lamp{
+  width:64px;height:64px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 0 10px var(--accent-glow), 0 0 60px var(--accent-glow);
+  animation:ignite 1s cubic-bezier(.22,.7,.3,1) both;
+  margin-bottom:30px;
+}
+.divider{height:1px;background:var(--line-2);margin:0}
+.list-row{
+  width:100%;display:flex;align-items:center;gap:13px;padding:16px 0;text-align:left;
+}
+.list-row + .list-row{border-top:1px solid var(--line-2)}
+.list-row .ic{
+  width:38px;height:38px;border-radius:12px;background:var(--surface-2);display:grid;place-items:center;
+  font-family:var(--font-display);font-size:15px;color:var(--ink-2);flex:0 0 auto;
+}
+.list-row .tx{flex:1;min-width:0}
+.list-row .tx b{display:block;font-size:14.5px;font-weight:700}
+.list-row .tx span{font-size:12.5px;color:var(--ink-3)}
+.list-row .ch{color:var(--ink-3);font-size:17px;flex:0 0 auto}
+
+.horizon{
+  display:flex;align-items:center;gap:12px;margin-top:6px;
+}
+.horizon .ln{flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+.horizon .tx{font-family:var(--font-display);font-size:13px;color:var(--ink-3);flex:0 0 auto}
+
+.monthblock + .monthblock{margin-top:22px}
+.monthblock .mh{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:11px}
+.monthblock .mn{font-family:var(--font-display);font-size:16px}
+.monthblock .mc{font-size:11.5px;font-weight:700;color:var(--ink-3);letter-spacing:.03em}
+
+.note{
+  font-size:11.5px;color:var(--ink-3);line-height:1.5;
+}
+.seg{display:flex;background:var(--surface-2);border-radius:12px;padding:3px;gap:3px}
+.seg button{flex:1;padding:9px;border-radius:9px;font-size:13px;font-weight:600;color:var(--ink-3)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+
+/* ---------- Calendar layer ---------- */
+.day.blocked{opacity:.42;background:var(--surface-2);box-shadow:none}
+.day.blocked .dd{text-decoration:line-through;text-decoration-thickness:1px}
+.day .bid{
+  position:absolute;bottom:6px;width:13px;height:3px;border-radius:999px;
+  background:var(--accent);opacity:.85;
+}
+.opp{
+  width:100%;display:flex;align-items:center;gap:12px;padding:13px 0;text-align:left;
+}
+.opp + .opp{border-top:1px solid var(--line-2)}
+.opp .dt{
+  width:42px;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:0;
+}
+.opp .dt b{font-family:var(--font-display);font-size:19px;line-height:1.1;font-variant-numeric:tabular-nums}
+.opp .dt span{font-size:9.5px;font-weight:700;letter-spacing:.05em;color:var(--ink-3);text-transform:uppercase}
+.opp .tx{flex:1;min-width:0}
+.opp .tx b{display:block;font-size:14px;font-weight:700}
+.opp .tx span{font-size:12px;color:var(--ink-3)}
+.opp .why{
+  flex:0 0 auto;font-size:11px;font-weight:700;color:var(--ink-3);
+  border:1px solid var(--line);border-radius:999px;padding:4px 9px;
+}
+.srcbox{
+  border-left:2px solid var(--accent);padding:2px 0 2px 13px;
+  display:flex;flex-direction:column;gap:5px;
+}
+.srcbox .ar{
+  font-family:var(--font-display);font-size:16px;line-height:1.8;direction:rtl;text-align:right;
+  color:var(--ink);
+}
+.srcbox .tr{font-size:13.5px;line-height:1.6;color:var(--ink-2);font-style:italic}
+.srcbox .cite{font-size:11.5px;font-weight:700;color:var(--ink-3);letter-spacing:.01em}
+.grade{
+  display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;
+  letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:5px;
+}
+.grade.sahih{color:var(--accent);background:var(--accent-soft)}
+.grade.zayif{color:var(--ink-2);background:var(--surface-2);border:1px dashed var(--line)}
+.disclaim{
+  font-size:11.5px;line-height:1.55;color:var(--ink-3);
+  border-top:1px solid var(--line-2);padding-top:12px;
+}
+.season{
+  border-radius:var(--r-card);padding:18px 20px;
+  border:1.4px solid var(--accent);background:var(--accent-soft);
+  display:flex;flex-direction:column;gap:9px;
+}
+.season .hd{display:flex;align-items:center;gap:8px}
+.season .hd .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex:0 0 auto}
+.season .hd b{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+
+@media (max-width:460px){
+  .stage{padding-block:16px 0;padding-inline:0;gap:12px}
+  .proto-head,.rail{padding:0 16px}
+  .phone{
+    width:100%;height:auto;min-height:82vh;border-radius:0;box-shadow:none;
+  }
+  .notch{display:none}
+  .statusbar{display:none}
+  .viewport{min-height:78vh}
+}
+</style>
+
+<div class="stage">
+  <header class="proto-head">
+    <h1>Niyet</h1>
+    <p>Tıklanabilir prototip · Kaza orucu akışı · <span id="pd"></span></p>
+    <button class="reset" id="reset">Sıfırla</button>
+  </header>
+
+  <nav class="rail" id="rail" aria-label="Prototip ekranları">
+    <button data-go="welcome">1 · Karşılama</button>
+    <button data-go="count">2 · Gün sayısı</button>
+    <button data-go="pace">3 · Tempo</button>
+    <button data-go="ready">4 · İlk değer anı</button>
+    <button data-go="today">5 · Bugün</button>
+    <button data-go="journey">6 · Yolculuk</button>
+    <button data-go="circle">7 · Çevre</button>
+    <button data-go="room">8 · Grup odası</button>
+    <button data-go="sources">9 · Kaynaklar</button>
+    <button id="demo-shaban" style="margin-left:auto;color:var(--accent)">⟳ Şaban'a atla</button>
+  </nav>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="statusbar">
+      <span class="num" id="clock">9:41</span>
+      <span class="dots"><span></span><span></span><span></span><span class="bat"></span></span>
+    </div>
+
+    <div class="viewport">
+
+      <!-- ══════════════ 1 · WELCOME ══════════════ -->
+      <section class="screen" id="s-welcome">
+        <div class="screen-body pad" style="display:flex;flex-direction:column;justify-content:center;gap:26px;padding-top:40px">
+          <div class="field" style="max-width:210px;gap:11px" id="welcome-field"></div>
+          <div class="stack" style="gap:14px">
+            <h2 class="display">Kaza orucunu<br>aklında taşıma.</h2>
+            <p class="lede">Kaç gün kaldığını, ne zaman tutacağını ve nasıl gittiğini burası hatırlasın. Sen sadece bir sonraki günü seç.</p>
+          </div>
+          <div class="privacy">
+            <svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            <p class="tiny" style="color:var(--ink-2)">Adet takibi yok, sağlık verisi yok, sebep sorulmuyor. Sadece gün sayısı.</p>
+          </div>
+        </div>
+        <div class="footer-cta">
+          <button class="btn" data-go="count">Başla</button>
+          <button class="btn ghost sm" style="width:100%" data-go="today">Hesabım var, giriş yap</button>
+        </div>
+      </section>
+
+      <!-- ══════════════ 2 · COUNT ══════════════ -->
+      <section class="screen" id="s-count">
+        <div class="apphead"><button class="btn ghost sm" data-go="welcome" style="padding-left:0">← Geri</button></div>
+        <div class="screen-body pad" style="display:flex;flex-direction:column;gap:30px">
+          <div class="stack" style="gap:10px">
+            <span class="eyebrow">Adım 1 / 2</span>
+            <h2 class="display">Kaç gün kaza orucun var?</h2>
+            <p class="tiny">Tam sayıyı bilmen gerekmiyor. Sonra istediğin zaman değiştirebilirsin.</p>
+          </div>
+
+          <div class="stepper">
+            <button class="pm" id="minus" aria-label="Azalt">−</button>
+            <span class="big num" id="countval">7</span>
+            <button class="pm" id="plus" aria-label="Artır">+</button>
+          </div>
+
+          <div class="stack" style="gap:12px">
+            <button class="btn ghost sm" id="unsure" style="width:100%;justify-content:flex-start;padding-left:0">Tam olarak bilmiyorum →</button>
+            <div id="unsure-box" hidden class="card flat" style="display:flex;flex-direction:column;gap:13px">
+              <p class="tiny" style="color:var(--ink-2)">Sorun değil, çoğu kişi bilmiyor. Bir tahminle başla — yolda netleşir.</p>
+              <div class="chips">
+                <button class="chip" data-set="5">5 gün</button>
+                <button class="chip" data-set="7">7 gün</button>
+                <button class="chip" data-set="10">10 gün</button>
+                <button class="chip" data-set="24">Birkaç yıl birikti</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer-cta">
+          <button class="btn" data-go="pace">Devam</button>
+        </div>
+      </section>
+
+      <!-- ══════════════ 3 · PACE ══════════════ -->
+      <section class="screen" id="s-pace">
+        <div class="apphead"><button class="btn ghost sm" data-go="count" style="padding-left:0">← Geri</button></div>
+        <div class="screen-body pad" style="display:flex;flex-direction:column;gap:24px">
+          <div class="stack" style="gap:10px">
+            <span class="eyebrow">Adım 2 / 2</span>
+            <h2 class="display">Nasıl bir tempo sana uyar?</h2>
+            <p class="tiny" id="pace-context">Ramazan'a 149 gün var. Acele etmene gerek yok.</p>
+          </div>
+
+          <div class="stack" style="gap:10px" id="pace-list"></div>
+
+          <p class="note">Tempoyu sonra değiştirebilir, istediğin haftayı boş geçebilirsin. Bu bir taahhüt değil, bir başlangıç tahmini.</p>
+        </div>
+        <div class="footer-cta">
+          <button class="btn" data-go="ready">Planımı oluştur</button>
+        </div>
+      </section>
+
+      <!-- ══════════════ 4 · READY ══════════════ -->
+      <section class="screen" id="s-ready">
+        <div class="screen-body pad" style="display:flex;flex-direction:column;justify-content:center;gap:28px;padding-top:30px">
+          <div class="stack" style="gap:16px">
+            <span class="eyebrow">Planın hazır</span>
+            <h2 class="display" id="ready-head">7 gün, 4 aya yayıldı.</h2>
+            <p class="lede" id="ready-sub">Ayda yaklaşık 2 gün. İlk günü sen seç, gerisini biz hatırlatırız.</p>
+          </div>
+
+          <div class="card" style="display:flex;flex-direction:column;gap:16px">
+            <div class="field lg" id="ready-field" style="gap:11px"></div>
+            <div class="horizon">
+              <span class="ln"></span>
+              <span class="tx" id="ready-horizon">Ramazan 1448</span>
+            </div>
+          </div>
+
+          <div class="privacy">
+            <svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            <p class="tiny" style="color:var(--ink-2)">Bu sayıyı kimse göremez. Arkadaşlarınla paylaşmayı seçersen bile sadece o ayki hedefin görünür.</p>
+          </div>
+        </div>
+        <div class="footer-cta">
+          <button class="btn" data-sheet="plan">İlk günümü seçeyim</button>
+          <button class="btn ghost sm" style="width:100%" data-go="today">Sonra seçerim</button>
+        </div>
+      </section>
+
+      <!-- ══════════════ 5 · TODAY ══════════════ -->
+      <section class="screen" id="s-today">
+        <div class="apphead">
+          <div class="dates">
+            <span class="g" id="today-greet">Bugün</span>
+            <span class="h" id="today-hijri">—</span>
+          </div>
+          <button class="iconbtn" aria-label="Takvim ayarı" data-sheet="cal">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"/></svg>
+          </button>
+        </div>
+
+        <div class="screen-body pad" style="display:flex;flex-direction:column;gap:16px">
+          <!-- Hero: next action -->
+          <div class="hero-next" id="hero"></div>
+
+          <!-- Seasonal / calendar context -->
+          <div id="season-slot"></div>
+
+          <!-- Remaining + constellation -->
+          <button class="card" id="remaining-card" data-go="journey" style="text-align:left;display:flex;flex-direction:column;gap:14px;width:100%">
+            <div class="between">
+              <div class="stack">
+                <span class="eyebrow">Kalan</span>
+                <span style="font-family:var(--font-display);font-size:26px;line-height:1.2" id="remaining-num">7 gün</span>
+              </div>
+              <span class="tiny" id="remaining-note">Başlangıç: 7</span>
+            </div>
+            <div class="field" id="today-field"></div>
+          </button>
+
+          <!-- Month intention -->
+          <div class="card flat" style="display:flex;flex-direction:column;gap:12px">
+            <div class="between">
+              <span class="eyebrow">Bu ayki niyetin</span>
+              <span class="tiny num" id="month-count">0 / 3</span>
+            </div>
+            <div class="row" style="gap:7px" id="month-pips"></div>
+            <p class="tiny" id="month-line">Eylül için 3 gün düşünmüştün.</p>
+          </div>
+
+          <!-- Circle -->
+          <button class="card" id="circle-peek" data-go="room" style="text-align:left;display:flex;flex-direction:column;gap:12px;width:100%">
+            <div class="between">
+              <span class="eyebrow">Üç Gün Birlikte</span>
+              <span class="tiny">4 kişi</span>
+            </div>
+            <p style="font-size:14.5px;line-height:1.5;color:var(--ink-2);margin:0" id="circle-line">
+              <b style="color:var(--ink)">Meryem</b> yarın için oruç planladı.
+            </p>
+            <span class="tiny" style="color:var(--accent);font-weight:700">Gruba git →</span>
+          </button>
+
+          <p class="note" style="text-align:center;padding:4px 10px 0">
+            Vakitler örnek olarak İstanbul'a göre gösteriliyor.
+          </p>
+        </div>
+
+        <nav class="tabbar" data-tabs></nav>
+      </section>
+
+      <!-- ══════════════ 6 · JOURNEY ══════════════ -->
+      <section class="screen" id="s-journey">
+        <div class="apphead">
+          <div class="dates">
+            <span class="g">Yolculuk</span>
+            <span class="h" id="journey-sub">Başladığın günden bugüne</span>
+          </div>
+        </div>
+        <div class="screen-body pad" style="display:flex;flex-direction:column;gap:20px">
+          <div class="card" style="display:flex;flex-direction:column;gap:18px">
+            <div class="between" style="align-items:flex-end">
+              <div class="stack" style="gap:3px">
+                <span class="eyebrow">Tamamlanan</span>
+                <span style="font-family:var(--font-display);font-size:44px;line-height:1;font-weight:300" class="num" id="j-done">0</span>
+              </div>
+              <div class="stack" style="gap:3px;text-align:right">
+                <span class="eyebrow">Kalan</span>
+                <span style="font-family:var(--font-display);font-size:26px;line-height:1.2" class="num" id="j-left">7</span>
+              </div>
+            </div>
+            <div class="field lg" id="j-field" style="gap:11px"></div>
+            <div class="horizon">
+              <span class="ln"></span>
+              <span class="tx" id="j-horizon">Ramazan'a 149 gün</span>
+            </div>
+          </div>
+
+          <div class="stack" style="gap:14px" id="j-months"></div>
+
+          <div class="card flat">
+            <p class="tiny" style="color:var(--ink-2);line-height:1.6">
+              Sayı azalmak zorunda değil. Bir hafta boş geçtiyse plan kendini yeniden dağıtır — geri kalmış olmazsın.
+            </p>
+          </div>
+        </div>
+        <nav class="tabbar" data-tabs></nav>
+      </section>
+
+      <!-- ══════════════ 7 · CIRCLE LIST ══════════════ -->
+      <section class="screen" id="s-circle">
+        <div class="apphead">
+          <div class="dates">
+            <span class="g">Çevren</span>
+            <span class="h">Küçük, özel, isteğe bağlı</span>
+          </div>
+        </div>
+        <div class="screen-body pad" style="display:flex;flex-direction:column;gap:18px">
+          <div class="card" style="padding:6px 20px">
+            <button class="list-row" data-go="room" style="width:100%">
+              <span class="ic">3</span>
+              <span class="tx"><b>Üç Gün Birlikte</b><span>Eylül · 4 kişi · sen 0/3</span></span>
+              <span class="ch">›</span>
+            </button>
+            <button class="list-row" data-sheet="create" style="width:100%">
+              <span class="ic" style="color:var(--accent);background:var(--accent-soft)">+</span>
+              <span class="tx"><b>Yeni bir grup kur</b><span>Bir ay, bir hedef, birkaç kişi</span></span>
+              <span class="ch">›</span>
+            </button>
+          </div>
+
+          <div class="privacy">
+            <svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            <div class="stack" style="gap:5px">
+              <p class="tiny" style="color:var(--ink);font-weight:700">Grupta ne görünür?</p>
+              <p class="tiny" style="color:var(--ink-2);line-height:1.55">
+                Sadece o ayki ortak hedefe kaç gün yaptığın. Toplam kaza sayın, hangi günleri seçtiğin ve neden tutamadığın hiçbir zaman görünmez.
+              </p>
+            </div>
+          </div>
+
+          <div class="card flat" style="display:flex;flex-direction:column;gap:8px">
+            <p class="tiny" style="color:var(--ink);font-weight:700">Tek başına da tamam.</p>
+            <p class="tiny" style="line-height:1.55">Grup zorunlu değil. Uygulamanın tamamı gruba hiç girmeden çalışır.</p>
+          </div>
+        </div>
+        <nav class="tabbar" data-tabs></nav>
+      </section>
+
+      <!-- ══════════════ 8 · CIRCLE ROOM ══════════════ -->
+      <section class="screen" id="s-room">
+        <div class="apphead">
+          <div class="dates">
+            <span class="g">Üç Gün Birlikte</span>
+            <span class="h">Eylül · 3 günlük ortak hedef</span>
+          </div>
+          <button class="iconbtn" data-go="circle" aria-label="Kapat">
+            <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        <div class="screen-body pad" style="display:flex;flex-direction:column;gap:16px">
+
+          <div class="card" style="display:flex;flex-direction:column;gap:6px">
+            <div class="between" style="margin-bottom:6px">
+              <span class="eyebrow">Grup ilerlemesi</span>
+              <span class="tiny num" id="room-total">6 / 12 gün</span>
+            </div>
+            <div id="room-members"></div>
+          </div>
+
+          <div class="nudge">
+            <span class="av" style="width:28px;height:28px;font-size:11px">M</span>
+            <div class="stack" style="gap:3px">
+              <p class="qt"><b>Meryem</b> yarın oruç tutacak. “Beraber mi?”</p>
+              <span class="tiny">2 saat önce</span>
+            </div>
+          </div>
+
+          <div class="stack" style="gap:9px">
+            <button class="btn outline" id="join-tomorrow">Ben de varım</button>
+            <div class="chips" style="justify-content:center">
+              <button class="chip" data-say="Kabul olsun">Kabul olsun</button>
+              <button class="chip" data-say="Kolay gelsin">Kolay gelsin</button>
+              <button class="chip" data-say="Bu hafta zor, sonraki">Bu hafta zor, sonraki</button>
+            </div>
+            <p class="note" style="text-align:center">Serbest mesaj yok — yalnızca bu kısa ifadeler. Kimse açıklama yapmak zorunda kalmasın diye.</p>
+          </div>
+
+          <div class="privacy">
+            <svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            <p class="tiny" style="color:var(--ink-2)">Grup Eylül sonunda kapanır. Sıralama yok, seri yok, eksik kalan işaretlenmez.</p>
+          </div>
+
+          <button class="btn ghost sm" style="width:100%">Gruptan sessizce ayrıl</button>
+        </div>
+      </section>
+
+      <!-- ══════════════ SHEET: PLAN ══════════════ -->
+      <div class="sheet-scrim" id="sheet-plan">
+        <div class="sheet">
+          <div class="grab"></div>
+          <div class="pad stack" style="gap:6px;margin-bottom:16px">
+            <h3 class="display sm">Hangi gün?</h3>
+            <p class="tiny">Seçtiğin günün akşamı değil, sabahı hatırlatırız.</p>
+          </div>
+          <div class="daystrip" id="daystrip"></div>
+          <div class="pad stack" style="gap:16px">
+            <p class="note" id="strip-note" style="display:flex;align-items:flex-start;gap:7px">
+              <span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex:0 0 auto;margin-top:6px"></span>
+              <span>Pazartesi ve perşembe, birçok kişinin tercih ettiği günler. Seçtiğin gün <b>kaza orucu</b> olarak sayılır.</span>
+            </p>
+
+            <div class="card flat" style="padding:4px 18px" id="opp-card">
+              <div style="padding:13px 0 2px"><span class="eyebrow">Yaklaşan fırsat günleri</span></div>
+              <div id="opp-list"></div>
+            </div>
+
+            <button class="btn" id="confirm-plan" disabled>Bu günü planla</button>
+            <button class="btn ghost sm" style="width:100%" data-close>Vazgeç</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════ SHEET: CREATE CIRCLE ══════════════ -->
+      <div class="sheet-scrim" id="sheet-create">
+        <div class="sheet">
+          <div class="grab"></div>
+          <div class="pad stack" style="gap:20px">
+            <div class="stack" style="gap:6px">
+              <h3 class="display sm">Yeni grup</h3>
+              <p class="tiny">Bir ay sürer, sonra kendi kendine kapanır.</p>
+            </div>
+
+            <div class="stack" style="gap:9px">
+              <span class="eyebrow">Bu ay kaç gün?</span>
+              <div class="seg" id="goal-seg">
+                <button aria-pressed="false">1 gün</button>
+                <button aria-pressed="true">3 gün</button>
+                <button aria-pressed="false">5 gün</button>
+              </div>
+            </div>
+
+            <div class="privacy">
+              <svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+              <p class="tiny" style="color:var(--ink-2)">Katılanlar sadece “3 günün kaçını yaptın” bilgisini görür. Toplam kaza sayın paylaşılmaz.</p>
+            </div>
+
+            <div class="stack" style="gap:9px">
+              <button class="btn amber">WhatsApp'tan davet et</button>
+              <button class="btn outline">Bağlantıyı kopyala</button>
+              <button class="btn ghost sm" style="width:100%" data-close>Vazgeç</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════ 9 · SOURCES ══════════════ -->
+      <section class="screen" id="s-sources">
+        <div class="apphead">
+          <div class="dates">
+            <span class="g">Kaynaklar</span>
+            <span class="h">Bilgi, fetva değil</span>
+          </div>
+          <button class="iconbtn" data-go="today" aria-label="Kapat">
+            <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        <div class="screen-body pad" style="display:flex;flex-direction:column;gap:16px">
+
+          <div class="card flat" style="display:flex;flex-direction:column;gap:9px">
+            <p style="font-size:14px;font-weight:700;margin:0">Bu uygulama hüküm vermez.</p>
+            <p class="tiny" style="line-height:1.6">
+              Gösterilen her rivayet kaynağı ve derecesiyle birlikte verilir. Âlimlerin ayrıldığı
+              bir konu varsa bunu ayrıldığını söyleyerek gösteririz — bir tarafı seçip sana tek doğru
+              gibi sunmayız. Kendi mezhebine veya güvendiğin bir âlime danış.
+            </p>
+          </div>
+
+          <div class="card" style="display:flex;flex-direction:column;gap:14px">
+            <span class="eyebrow">Kazanın dayanağı</span>
+            <div class="srcbox">
+              <p class="ar">فَعِدَّةٌ مِّنْ أَيَّامٍ أُخَرَ ۗ يُرِيدُ اللَّهُ بِكُمُ الْيُسْرَ وَلَا يُرِيدُ بِكُمُ الْعُسْرَ</p>
+              <p class="tr">“…tutamadığı günler sayısınca başka günlerde tutsun. Allah size kolaylık diler, zorluk dilemez.”</p>
+              <p class="cite">Bakara, 185</p>
+            </div>
+            <p class="tiny" style="line-height:1.6">
+              Kazayı emreden ayet, aynı cümlede kolaylığı da söylüyor. Bu uygulamanın tonu buradan geliyor.
+            </p>
+          </div>
+
+          <div class="card" style="display:flex;flex-direction:column;gap:14px">
+            <div class="between">
+              <span class="eyebrow">Ertelemek üzerine</span>
+              <span class="grade sahih">Muttefekun aleyh</span>
+            </div>
+            <div class="srcbox">
+              <p class="ar">كَانَ يَكُونُ عَلَىَّ الصَّوْمُ مِنْ رَمَضَانَ فَمَا أَسْتَطِيعُ أَنْ أَقْضِىَ إِلاَّ فِى شَعْبَانَ</p>
+              <p class="tr">“Üzerimde Ramazan'dan oruç borcu olurdu da onu ancak Şaban'da kaza edebilirdim.”</p>
+              <p class="cite">Hz. Âişe (r.a.) · Buhârî 1950 · Müslim 1146</p>
+            </div>
+            <p class="tiny" style="line-height:1.6">
+              Uygulamada tek bir yerde görünür: geç kaldığını düşündüğün anda. Bildirim olarak gönderilmez.
+            </p>
+          </div>
+
+          <div class="card" style="display:flex;flex-direction:column;gap:14px">
+            <div class="between">
+              <span class="eyebrow">Eyyam-ı bîd</span>
+              <span class="grade sahih">Hasen–sahih</span>
+            </div>
+            <p class="tiny" style="line-height:1.6;color:var(--ink-2)">
+              Her kamerî ayın 13, 14 ve 15. günlerinde oruç tutulması rivayetlerde geçer
+              (Nesâî, Tirmizî). Uygulama bu günleri <b>nafile oruç önerisi olarak değil</b>,
+              kaza gününü yerleştirebileceğin bir zamanlama seçeneği olarak işaretler.
+            </p>
+            <p class="disclaim">
+              Bir kaza orucunun aynı zamanda nafile sevabı kazandırıp kazandırmayacağı
+              (niyet birleştirme) âlimler arasında ihtilaflıdır. Uygulama bu soruya cevap vermez;
+              seçtiğin gün her hâlükârda <b>kaza</b> olarak sayılır.
+            </p>
+          </div>
+
+          <div class="card" style="display:flex;flex-direction:column;gap:14px">
+            <div class="between">
+              <span class="eyebrow">Berat Kandili · Şaban'ın 14/15. gecesi</span>
+              <span class="grade zayif">İhtilaflı</span>
+            </div>
+            <p class="tiny" style="line-height:1.6;color:var(--ink-2)">
+              Diyanet takvimi seçiliyken bu gün kaza için <b>önerilir</b> — Türkiye'de yaygın
+              bir uygulamadır ve Hanefî geleneğinde fezâil konusunda zayıf hadisle amel
+              edilebileceği kabul edilir.
+            </p>
+            <p class="disclaim" style="border-top:none;padding-top:0">
+              Açık olmak gerekirse: 15 Şaban'da oruç tavsiye eden rivayet İbn Mâce'de geçer ve
+              senedinde Ebû Bekr b. Ebî Sebre bulunduğu için hadis âlimlerinin çoğunluğu
+              tarafından <b>zayıf</b> sayılmıştır. Bir kısım âlim bu gün için özel bir oruç
+              sünnetinin sabit olmadığı görüşündedir. Öneriyi gizlemiyor, kaynağıyla birlikte
+              gösteriyoruz — Ümmü'l-Kurâ takvimine geçersen kandil önerileri kapanır.
+            </p>
+          </div>
+
+          <div class="card" style="display:flex;flex-direction:column;gap:12px">
+            <div class="between">
+              <span class="eyebrow">Oruç tutulmayan günler</span>
+              <span class="grade sahih">İttifak</span>
+            </div>
+            <p class="tiny" style="line-height:1.6;color:var(--ink-2)">
+              Ramazan Bayramı'nın 1. günü ile Kurban Bayramı ve onu izleyen teşrik günlerinde
+              oruç tutulmaması konusunda mezhepler arasında ayrılık yoktur. Bu günler plan
+              takviminde <b>seçilemez</b> — hatırlatma değil, engel olarak.
+            </p>
+          </div>
+
+          <div class="card" style="display:flex;flex-direction:column;gap:13px">
+            <span class="eyebrow">Hicrî takvim kaynağı</span>
+            <p class="tiny" style="line-height:1.65;color:var(--ink-2)">
+              Diyanet, kamerî ay başlangıçlarını <b>1978 İstanbul Rüyet-i Hilâl Konferansı</b>
+              kriterlerine göre belirler: hilalin güneşten açısal uzaklığının en az <b>8°</b>,
+              güneş batarken ufuk yüksekliğinin en az <b>5°</b> olması ve bu şartın
+              <b>dünyanın herhangi bir yerinde</b> gerçekleşmesi.
+            </p>
+            <p class="tiny" style="line-height:1.65;color:var(--ink-2)">
+              Ümmü'l-Kurâ takvimi ise Mekke merkezli hesap yapar. İki takvim çoğu ay örtüşür,
+              bazı aylarda <b>1–2 gün</b> ayrışır.
+            </p>
+            <p class="disclaim">
+              Bu yüzden tarihler formülle üretilmiyor: Diyanet'in <b>vakithesaplama.diyanet.gov.tr</b>
+              üzerinde yayımladığı "Dinî Günler" listesindeki her ay başı ve her kandil, birebir
+              uygulamaya gömülüyor. Regaib gibi hafta gününe bağlı kandiller yıldan yıla kayar —
+              o yüzden bunlar da hesaplanmıyor, Diyanet'in ilan ettiği gün doğrudan kullanılıyor.
+              Ayarlardan takvim kaynağını değiştirebilirsin — bu ayar hem tarihleri hem kandil
+              önerilerinin görünüp görünmeyeceğini belirler.
+            </p>
+            <button class="btn outline" data-sheet="cal">Takvimi değiştir</button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ══════════════ SHEET: CALENDAR SOURCE ══════════════ -->
+      <div class="sheet-scrim" id="sheet-cal">
+        <div class="sheet">
+          <div class="grab"></div>
+          <div class="pad stack" style="gap:18px">
+            <div class="stack" style="gap:6px">
+              <h3 class="display sm">Hicrî takvim</h3>
+              <p class="tiny">Kamerî ay başlangıçları ülkeye göre 1–2 gün kayabilir.</p>
+            </div>
+
+            <div class="stack" style="gap:10px" id="cal-list">
+              <button class="pace" data-cal="diyanet">
+                <span class="stack">
+                  <span class="t">Diyanet</span>
+                  <span class="s">1978 İstanbul kriterleri · Türkiye</span>
+                </span>
+                <span class="when">Kandil önerileri açık</span>
+              </button>
+              <button class="pace" data-cal="umalqura">
+                <span class="stack">
+                  <span class="t">Ümmü'l-Kurâ</span>
+                  <span class="s">Mekke merkezli hesap · Körfez</span>
+                </span>
+                <span class="when">Kandil önerileri kapalı</span>
+              </button>
+            </div>
+
+            <p class="disclaim">
+              Bu ayar yalnızca tarihleri değil, <b>öneri çerçevesini</b> de belirler.
+              Diyanet seçiliyken Berat gibi kandil günleri kaza için önerilir;
+              Ümmü'l-Kurâ seçiliyken yalnızca eyyam-ı bîd ile pazartesi–perşembe gösterilir.
+            </p>
+
+            <button class="btn ghost sm" style="width:100%" data-close>Kapat</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════ SHEET: WHY THIS DAY ══════════════ -->
+      <div class="sheet-scrim" id="sheet-why">
+        <div class="sheet">
+          <div class="grab"></div>
+          <div class="pad stack" style="gap:18px" id="why-body"></div>
+        </div>
+      </div>
+
+      <!-- ══════════════ MOMENT: COMPLETION ══════════════ -->
+      <div class="moment" id="moment">
+        <div class="lamp"></div>
+        <h2 class="display" style="font-size:27px">Bir gün tamamlandı.</h2>
+        <p class="lede" id="moment-sub" style="margin-top:12px;max-width:260px">Kalan 6 gün. Acelesi yok.</p>
+        <div style="height:34px"></div>
+        <button class="btn" style="max-width:220px" id="moment-close">Kapat</button>
+      </div>
+
+      <!-- ══════════════ MOMENT: ALL DONE ══════════════ -->
+      <div class="moment" id="moment-done">
+        <div class="lamp" style="box-shadow:0 0 0 14px var(--accent-glow), 0 0 90px var(--accent-glow)"></div>
+        <h2 class="display" style="font-size:27px">Hepsi tamam.</h2>
+        <p class="lede" style="margin-top:12px;max-width:270px">Bu yıl için kaza orucun kalmadı. Ramazan'a daha 149 gün var — bu sefer hafif gireceksin.</p>
+        <div style="height:30px"></div>
+        <button class="btn" style="max-width:240px" id="done-close">Yolculuğa bak</button>
+        <button class="btn ghost sm" style="margin-top:6px" id="done-close2">Kapat</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+var RAMADAN = new Date(2027, 1, 8);          // ~1 Ramazan 1448
+var TR_DAY = ["Paz","Pzt","Sal","Çar","Per","Cum","Cmt"];
+var TR_MONTH = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+
+var realToday = new Date(); realToday.setHours(0,0,0,0);
+var today = new Date(realToday.getTime());
+var demoShaban = false;
+var daysToRamadan = 0;
+
+function setToday(d){
+  today = new Date(d.getTime()); today.setHours(0,0,0,0);
+  daysToRamadan = Math.max(0, daysBetween(today, RAMADAN));
+}
+
+var DEFAULT = {
+  total: 7,
+  done: 0,
+  planned: [],       // ISO strings
+  goal: 3,
+  paceIdx: 1,
+  joinedTomorrow: false,
+  said: null,
+  calSource: "diyanet"
+};
+var S = load();
+
+function load(){
+  try{
+    var raw = localStorage.getItem("niyet-proto");
+    if(raw){ return Object.assign({}, DEFAULT, JSON.parse(raw)); }
+  }catch(e){}
+  return Object.assign({}, DEFAULT);
+}
+function save(){
+  try{ localStorage.setItem("niyet-proto", JSON.stringify(S)); }catch(e){}
+}
+
+function iso(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+function pad(n){ return n<10 ? "0"+n : ""+n; }
+function addDays(d,n){ var x = new Date(d.getTime()); x.setDate(x.getDate()+n); return x; }
+function daysBetween(a,b){ return Math.round((b-a)/86400000); }
+function fromIso(s){ var p = s.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
+
+function hijri(d){
+  try{
+    return new Intl.DateTimeFormat("tr-TR-u-ca-islamic-umalqura",{day:"numeric",month:"long",year:"numeric"}).format(d);
+  }catch(e){ return ""; }
+}
+/* ─────────────────────────────────────────────────────────
+   Hicrî tarih tek bir doğru değil.
+   Diyanet: 1978 İstanbul Rüyet-i Hilâl Konferansı kriterleri
+            (8° açısal uzaklık, 5° ufuk yüksekliği, dünyanın herhangi bir yerinde)
+   Ümmü'l-Kurâ: Mekke merkezli hesap. Aralarında 1-2 gün fark olabilir.
+
+   Aşağıdaki tablo Diyanet'in resmî "Dinî Günler" sayfalarından birebir alınmıştır:
+   vakithesaplama.diyanet.gov.tr/dinigunler.php?yil=2026
+   vakithesaplama.diyanet.gov.tr/icerik.php?icerik=154  (2027)
+   Tahmin/hesap yok — her ay başı ve her kandil/bayram, Diyanet'in yayımladığı
+   satır birebir kopyalanmıştır. Gerçek üründe bu tablo, her yıl Diyanet
+   yayımladığında güncellenen küçük bir veri dosyası olur.
+   ───────────────────────────────────────────────────────── */
+var MONTH_STARTS = [
+  // hicri yıl, hicri ay (1=Muharrem…12=Zilhicce), gregoryen başlangıç
+  {y:1447, m:7,  start:[2026,0,20]},  // Şaban    20 Oca 2026 Sal
+  {y:1447, m:8,  start:[2026,1,19]},  // Ramazan  19 Şub 2026 Per — Ramazan Başlangıcı
+  {y:1447, m:9,  start:[2026,2,20]},  // Şevval   20 Mar 2026 Cum — Ramazan Bayramı 1.gün
+  {y:1447, m:10, start:[2026,3,18]},  // Zilkade  18 Nis 2026 Cmt
+  {y:1447, m:11, start:[2026,4,18]},  // Zilhicce 18 May 2026 Pzt
+  {y:1448, m:0,  start:[2026,5,16]},  // Muharrem 16 Haz 2026 Sal — Hicrî Yılbaşı
+  {y:1448, m:1,  start:[2026,6,15]},  // Safer    15 Tem 2026 Çar
+  {y:1448, m:2,  start:[2026,7,14]},  // R.evvel  14 Ağu 2026 Cum
+  {y:1448, m:3,  start:[2026,8,12]},  // R.ahir   12 Eyl 2026 Cmt
+  {y:1448, m:4,  start:[2026,9,12]},  // C.evvel  12 Eki 2026 Pzt
+  {y:1448, m:5,  start:[2026,10,10]}, // C.ahir   10 Kas 2026 Sal
+  {y:1448, m:6,  start:[2026,11,10]}, // Receb    10 Ara 2026 Per — Üç Ayların Başlangıcı
+  {y:1448, m:7,  start:[2027,0,9]},   // Şaban    09 Oca 2027 Cmt
+  {y:1448, m:8,  start:[2027,1,8]},   // Ramazan  08 Şub 2027 Pzt — Ramazan Başlangıcı
+  {y:1448, m:9,  start:[2027,2,9]},   // Şevval   09 Mar 2027 Sal — Ramazan Bayramı 1.gün
+  {y:1448, m:10, start:[2027,3,8]},   // Zilkade  08 Nis 2027 Per
+  {y:1448, m:11, start:[2027,4,7]},   // Zilhicce 07 May 2027 Cum
+  {y:1449, m:0,  start:[2027,5,6]},   // Muharrem 06 Haz 2027 Paz — Hicrî Yılbaşı
+  {y:1449, m:1,  start:[2027,6,5]},   // Safer    05 Tem 2027 Pzt
+  {y:1449, m:2,  start:[2027,7,3]},   // R.evvel  03 Ağu 2027 Sal
+  {y:1449, m:3,  start:[2027,8,2]},   // R.ahir   02 Eyl 2027 Per
+  {y:1449, m:4,  start:[2027,9,1]},   // C.evvel  01 Eki 2027 Cum
+  {y:1449, m:5,  start:[2027,9,31]},  // C.ahir   31 Eki 2027 Paz
+  {y:1449, m:6,  start:[2027,10,29]}, // Receb    29 Kas 2027 Pzt
+  {y:1449, m:7,  start:[2027,11,29]}  // Şaban    29 Ara 2027 Çar
+].map(function(r){ return {y:r.y, m:r.m, start:new Date(r.start[0],r.start[1],r.start[2])}; });
+MONTH_STARTS.forEach(function(r,i){
+  r.end = MONTH_STARTS[i+1] ? addDays(MONTH_STARTS[i+1].start,-1) : addDays(r.start,29);
+});
+
+function hijriIntl(d){
+  try{
+    var parts = new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",
+      {day:"numeric",month:"numeric",year:"numeric"}).formatToParts(d);
+    var o = {};
+    parts.forEach(function(p){ o[p.type] = p.value; });
+    return { d:parseInt(o.day,10), m:parseInt(o.month,10)-1, y:parseInt(o.year,10), src:"umalqura" };
+  }catch(e){ return null; }
+}
+
+/* m: 0=Muharrem … 11=Zilhicce (JS ay indeksleriyle tutarlı) */
+function hijriParts(d){
+  if(S.calSource === "diyanet"){
+    for(var i=0;i<MONTH_STARTS.length;i++){
+      var r = MONTH_STARTS[i];
+      if(d >= r.start && d <= r.end){
+        return { d: daysBetween(r.start, d)+1, m:r.m, y:r.y, src:"diyanet" };
+      }
+    }
+  }
+  return hijriIntl(d);
+}
+
+var HMONTH = ["Muharrem","Safer","Rebîülevvel","Rebîülâhir","Cemâziyelevvel","Cemâziyelâhir",
+              "Receb","Şaban","Ramazan","Şevval","Zilkade","Zilhicce"];
+
+/* ─────────────────────────────────────────────────────────
+   Kandiller ve bayramlar hicrî ay/gün formülüyle HESAPLANMAZ.
+   Miraç, Regaib, Mevlid gibi kandillerin hangi Gregoryen güne denk
+   geldiği yıldan yıla haftanın hangi günü olduğuna göre kayar
+   (ör. Regaib 2026'da 1 Receb, 2027'de 4 Receb) — bu yüzden Diyanet'in
+   kendisi de bunları formülle değil, yıllık ilan ile yayımlar.
+   Aynı disiplinle biz de gerçek tarihi doğrudan tabloya yazıyoruz.
+   fast:true olanlar "fırsat günü" listesinde kaza için önerilir;
+   fast:false olanlar yalnızca tarih satırında bağlam olarak anılır.
+   ───────────────────────────────────────────────────────── */
+var NAMED_EVENTS = {
+  "2026-01-15": {key:"mirac",  label:"Miraç Kandili",  sub:"26 Receb 1447",     fast:false},
+  "2026-02-02": {key:"berat",  label:"Berat Kandili",  sub:"14 Şaban 1447",     fast:true},
+  "2026-05-26": {key:"arefe",  label:"Arefe Günü",     sub:"9 Zilhicce 1447",   fast:true},
+  "2026-06-25": {key:"asure",  label:"Aşure Günü",     sub:"10 Muharrem 1448",  fast:true},
+  "2026-08-24": {key:"mevlid", label:"Mevlid Kandili", sub:"11 Rebîülevvel 1448",fast:false},
+  "2026-12-10": {key:"regaib", label:"Regaib Kandili", sub:"1 Receb 1448",      fast:false},
+
+  "2027-01-04": {key:"mirac",  label:"Miraç Kandili",  sub:"26 Receb 1448",     fast:false},
+  "2027-01-22": {key:"berat",  label:"Berat Kandili",  sub:"14 Şaban 1448",     fast:true},
+  "2027-05-15": {key:"arefe",  label:"Arefe Günü",     sub:"9 Zilhicce 1448",   fast:true},
+  "2027-06-15": {key:"asure",  label:"Aşure Günü",     sub:"10 Muharrem 1449",  fast:true},
+  "2027-08-13": {key:"mevlid", label:"Mevlid Kandili", sub:"11 Rebîülevvel 1449",fast:false},
+  "2027-12-02": {key:"regaib", label:"Regaib Kandili", sub:"4 Receb 1449",      fast:false}
+};
+function namedInfo(d){
+  if(S.calSource !== "diyanet") return null;
+  return NAMED_EVENTS[iso(d)] || null;
+}
+
+/* Katman 1 — engel. Mezhepler arasında ihtilaf yok. Diyanet'in resmî tarihleri. */
+var BLOCKED_RANGES = [
+  {from:"2026-03-20", to:"2026-03-20", why:"Ramazan Bayramı — bu gün oruç tutulmaz"},
+  {from:"2026-05-27", to:"2026-05-30", why:"Kurban Bayramı ve teşrik günleri — bu günlerde oruç tutulmaz"},
+  {from:"2027-03-09", to:"2027-03-09", why:"Ramazan Bayramı — bu gün oruç tutulmaz"},
+  {from:"2027-05-16", to:"2027-05-19", why:"Kurban Bayramı ve teşrik günleri — bu günlerde oruç tutulmaz"}
+];
+function blockedReason(d){
+  if(S.calSource === "diyanet"){
+    var s = iso(d);
+    for(var i=0;i<BLOCKED_RANGES.length;i++){
+      var r = BLOCKED_RANGES[i];
+      if(s >= r.from && s <= r.to) return r.why;
+    }
+    return null;
+  }
+  /* Ümmü'l-Kurâ: tablo yok, hicrî ay/gün formülüyle tahmini engel */
+  var h = hijriParts(d); if(!h) return null;
+  if(h.m===9 && h.d===1) return "Ramazan Bayramı — bu gün oruç tutulmaz";
+  if(h.m===11 && h.d>=10 && h.d<=13) return "Kurban Bayramı ve teşrik günleri — bu günlerde oruç tutulmaz";
+  return null;
+}
+
+/* Katman 3 — fırsat. Yeni ibadet önerisi değil, kaza gününü yerleştirme seçeneği. */
+function opportunity(d){
+  var n = namedInfo(d);
+  if(n && n.fast) return {k:n.key, l:n.label, s:n.sub};
+  var h = hijriParts(d);
+  if(h && h.d>=13 && h.d<=15) return {k:"bid", l:"Eyyam-ı bîd", s:"Kamerî ayın "+h.d+". günü"};
+  if(d.getDay()===1) return {k:"wk", l:"Pazartesi", s:"Çok tercih edilen bir gün"};
+  if(d.getDay()===4) return {k:"wk", l:"Perşembe", s:"Çok tercih edilen bir gün"};
+  return null;
+}
+
+function namedDay(d){
+  var n = namedInfo(d);
+  return n ? n.label : null;
+}
+
+setToday(realToday);
+
+/* ---------------- navigation ---------------- */
+var screens = {};
+["welcome","count","pace","ready","today","journey","circle","room","sources"].forEach(function(k){
+  screens[k] = document.getElementById("s-"+k);
+});
+var current = "welcome";
+
+function go(name){
+  if(!screens[name]) return;
+  Object.keys(screens).forEach(function(k){ screens[k].classList.toggle("on", k===name); });
+  screens[name].scrollTop = 0;
+  current = name;
+  document.querySelectorAll("#rail button").forEach(function(b){
+    b.setAttribute("aria-current", b.dataset.go===name ? "true":"false");
+  });
+  document.querySelectorAll(".tabbar").forEach(function(t){
+    t.querySelectorAll("button").forEach(function(b){
+      b.setAttribute("aria-current", b.dataset.go===name ? "true":"false");
+    });
+  });
+  render();
+}
+
+/* tab bars */
+var TABS = [
+  {k:"today", l:"Bugün", p:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/>'},
+  {k:"journey", l:"Yolculuk", p:'<circle cx="6" cy="17" r="2.4"/><circle cx="12" cy="11" r="2.4"/><circle cx="18" cy="6" r="2.4"/><path d="M7.8 15.4L10.4 12.8M13.8 9.4L16.2 7.6" stroke-dasharray="1.5 2"/>'},
+  {k:"circle", l:"Çevre", p:'<circle cx="9" cy="9" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6S14 16 14.6 19"/><circle cx="17" cy="10.5" r="2.4"/><path d="M16 15c2.4.2 4 1.8 4.5 4"/>'}
+];
+document.querySelectorAll(".tabbar").forEach(function(bar){
+  bar.innerHTML = TABS.map(function(t){
+    return '<button data-go="'+t.k+'"><svg viewBox="0 0 24 24">'+t.p+'</svg>'+t.l+'</button>';
+  }).join("");
+});
+
+/* ---------------- constellation ---------------- */
+function fieldHTML(total, done, planned, cls){
+  var h = "";
+  for(var i=0;i<total;i++){
+    var c = "node" + (cls?" "+cls:"");
+    if(i < done) c += " done";
+    else if(i < done + planned) c += " planned";
+    h += '<span class="'+c+'"></span>';
+  }
+  return h;
+}
+
+/* ---------------- pace options ---------------- */
+function paceOptions(){
+  var left = Math.max(0, S.total - S.done);
+  var opts = [
+    {t:"Sakin", s:"Ayda 1 gün", perMonth:1},
+    {t:"Dengeli", s:"Ayda 2 gün", perMonth:2, rec:true},
+    {t:"Kararlı", s:"Haftada 1 gün", perMonth:4}
+  ];
+  return opts.map(function(o){
+    var months = Math.ceil(left / o.perMonth);
+    var end = new Date(today.getFullYear(), today.getMonth()+months, 1);
+    var fits = end <= RAMADAN;
+    o.when = TR_MONTH[end.getMonth()] + " " + end.getFullYear();
+    o.fits = fits;
+    o.months = months;
+    return o;
+  });
+}
+
+function renderPace(){
+  var list = document.getElementById("pace-list");
+  var opts = paceOptions();
+  list.innerHTML = opts.map(function(o,i){
+    return '<button class="pace" data-pace="'+i+'" aria-pressed="'+(i===S.paceIdx)+'">'+
+      '<span class="stack"><span class="t">'+o.t+(o.rec?'<span class="badge-rec">Önerilen</span>':'')+'</span>'+
+      '<span class="s">'+o.s+'</span></span>'+
+      '<span class="when">'+(o.fits ? o.when+"'de biter" : "Ramazan'ı geçer")+'</span></button>';
+  }).join("");
+  document.getElementById("pace-context").textContent =
+    "Ramazan'a " + daysToRamadan + " gün var. " + (S.total - S.done) + " gün için acele etmene gerek yok.";
+}
+
+/* ---------------- today hero ---------------- */
+function nextPlanned(){
+  var f = S.planned.map(fromIso).filter(function(d){ return d >= today; }).sort(function(a,b){return a-b;});
+  return f[0] || null;
+}
+
+function renderHero(){
+  var hero = document.getElementById("hero");
+  var left = S.total - S.done;
+
+  if(left <= 0){
+    hero.innerHTML =
+      '<span class="eyebrow">Tamamlandı</span>'+
+      '<h3 class="display sm" style="margin-top:8px">Kaza orucun kalmadı.</h3>'+
+      '<p class="tiny" style="margin-top:8px">İstersen nafile günleri planlamaya devam edebilirsin.</p>';
+    return;
+  }
+
+  var np = nextPlanned();
+  if(!np){
+    hero.innerHTML =
+      '<span class="eyebrow">Sıradaki adım</span>'+
+      '<h3 class="display sm" style="margin-top:8px">Planlı günün yok.</h3>'+
+      '<p class="tiny" style="margin-top:8px;margin-bottom:18px">Bu hafta için bir gün seçersen, sabahı hatırlatırız.</p>'+
+      '<button class="btn sm" style="width:100%" data-sheet="plan">Bir gün seç</button>';
+    return;
+  }
+
+  var diff = daysBetween(today, np);
+  var when = diff===0 ? "Bugün" : diff===1 ? "Yarın" : TR_DAY[np.getDay()]+", "+np.getDate()+" "+TR_MONTH[np.getMonth()];
+  var sub = diff===0 ? "Oruçlusun" : diff===1 ? TR_DAY[np.getDay()]+", "+np.getDate()+" "+TR_MONTH[np.getMonth()] : diff+" gün sonra";
+
+  hero.innerHTML =
+    '<span class="eyebrow">Planlı gün</span>'+
+    '<h3 class="display" style="font-size:28px;margin-top:7px">'+when+'</h3>'+
+    '<p class="tiny" style="margin-top:4px">'+sub+'</p>'+
+    '<div class="threshold">'+
+      '<div><span class="lbl">İmsak</span><span class="val">05:12</span></div>'+
+      '<div><span class="lbl">İftar</span><span class="val">19:24</span></div>'+
+    '</div>'+
+    (diff===0
+      ? '<button class="btn sm amber" style="width:100%;margin-top:16px" id="complete-btn">Tamamladım</button>'
+      : '<button class="btn sm outline" style="width:100%;margin-top:16px" id="cancel-plan">Bu günü kaldır</button>');
+}
+
+/* ---------------- month blocks (journey) ---------------- */
+function renderMonths(){
+  var wrap = document.getElementById("j-months");
+  var byMonth = {};
+  S.planned.forEach(function(s){
+    var d = fromIso(s);
+    var k = d.getFullYear()+"-"+d.getMonth();
+    (byMonth[k] = byMonth[k] || []).push(d);
+  });
+  var keys = Object.keys(byMonth).sort();
+  if(!keys.length){
+    wrap.innerHTML = '<div class="card flat"><p class="tiny" style="color:var(--ink-2);line-height:1.6">Henüz planlanmış gün yok. Bir gün seçtiğinde burada aylara göre görünecek.</p></div>';
+    return;
+  }
+  wrap.innerHTML = keys.map(function(k){
+    var arr = byMonth[k].sort(function(a,b){return a-b;});
+    var d0 = arr[0];
+    return '<div class="monthblock card flat">'+
+      '<div class="mh"><span class="mn">'+TR_MONTH[d0.getMonth()]+' '+d0.getFullYear()+'</span>'+
+      '<span class="mc">'+arr.length+' GÜN</span></div>'+
+      '<div class="stack" style="gap:0">'+
+        arr.map(function(d){
+          var past = d < today;
+          return '<div class="row" style="padding:9px 0;border-top:1px solid var(--line-2)">'+
+            '<span class="node '+(past?"done":"planned")+'" style="width:11px;height:11px"></span>'+
+            '<span style="font-size:14px;font-weight:600;flex:1">'+TR_DAY[d.getDay()]+', '+d.getDate()+' '+TR_MONTH[d.getMonth()]+'</span>'+
+            '<span class="tiny">'+(past?"tamamlandı":"planlı")+'</span></div>';
+        }).join("")+
+      '</div></div>';
+  }).join("");
+}
+
+/* ---------------- circle members ---------------- */
+function pipsHTML(n, of){
+  var h = "";
+  for(var i=0;i<of;i++) h += '<span class="pip'+(i<n?" on":"")+'"></span>';
+  return h;
+}
+function renderMembers(){
+  var mine = Math.min(S.done, S.goal);
+  var people = [
+    {n:"Meryem", i:"M", v:3},
+    {n:"Aişe", i:"A", v:2},
+    {n:"Sen", i:"S", v:mine, me:true},
+    {n:"Zeynep", i:"Z", v:1}
+  ];
+  document.getElementById("room-members").innerHTML = people.map(function(p){
+    return '<div class="member">'+
+      '<span class="av'+(p.me?" me":"")+'">'+p.i+'</span>'+
+      '<span class="nm">'+p.n+'</span>'+
+      '<span class="pg"><span class="pips">'+pipsHTML(p.v,3)+'</span></span></div>';
+  }).join("");
+  var total = people.reduce(function(a,p){return a+p.v;},0);
+  document.getElementById("room-total").textContent = total + " / 12 gün";
+}
+
+/* ---------------- master render ---------------- */
+function render(){
+  var left = Math.max(0, S.total - S.done);
+  var plannedFuture = S.planned.filter(function(s){ return fromIso(s) >= today; }).length;
+
+  document.getElementById("countval").textContent = S.total;
+  document.querySelectorAll("[data-set]").forEach(function(b){
+    b.setAttribute("aria-pressed", (+b.dataset.set === S.total) ? "true":"false");
+  });
+
+  document.getElementById("welcome-field").innerHTML = fieldHTML(7, 2, 1, "lg");
+
+  renderPace();
+
+  var opts = paceOptions();
+  var o = opts[S.paceIdx] || opts[1];
+  document.getElementById("ready-head").textContent = S.total + " gün, " + o.months + " aya yayıldı.";
+  document.getElementById("ready-sub").textContent = o.s + ". İlk günü sen seç, gerisini biz hatırlatırız.";
+  document.getElementById("ready-field").innerHTML = fieldHTML(S.total, 0, 0, "lg");
+  document.getElementById("ready-horizon").textContent = "Ramazan'a " + daysToRamadan + " gün";
+
+  document.getElementById("today-greet").textContent = today.getDate()+" "+TR_MONTH[today.getMonth()];
+  var ht = hijriParts(today);
+  document.getElementById("today-hijri").textContent =
+    (ht ? ht.d+" "+HMONTH[ht.m]+" "+ht.y : hijri(today)) +
+    (namedDay(today) ? " · "+namedDay(today) : "");
+  document.querySelectorAll("[data-cal]").forEach(function(b){
+    b.setAttribute("aria-pressed", b.dataset.cal===S.calSource ? "true":"false");
+  });
+  renderHero();
+  renderSeason();
+
+  document.getElementById("remaining-num").textContent = left + " gün";
+  document.getElementById("remaining-note").textContent = "Başlangıç: " + S.total;
+  document.getElementById("today-field").innerHTML = fieldHTML(S.total, S.done, plannedFuture, "");
+
+  var mDone = Math.min(S.done, S.goal);
+  document.getElementById("month-count").textContent = mDone + " / " + S.goal;
+  document.getElementById("month-pips").innerHTML = pipsHTML(mDone, S.goal);
+  document.getElementById("month-line").textContent =
+    mDone >= S.goal
+      ? TR_MONTH[today.getMonth()] + " niyetini tamamladın."
+      : TR_MONTH[today.getMonth()] + " için " + S.goal + " gün düşünmüştün.";
+
+  document.getElementById("circle-line").innerHTML = S.joinedTomorrow
+    ? '<b style="color:var(--ink)">Meryem</b> ve sen yarın için oruç planladınız.'
+    : '<b style="color:var(--ink)">Meryem</b> yarın için oruç planladı.';
+
+  document.getElementById("j-done").textContent = S.done;
+  document.getElementById("j-left").textContent = left;
+  document.getElementById("j-field").innerHTML = fieldHTML(S.total, S.done, plannedFuture, "lg");
+  document.getElementById("j-horizon").textContent = "Ramazan'a " + daysToRamadan + " gün";
+  renderMonths();
+  renderMembers();
+
+  save();
+}
+
+/* ---------------- day strip ---------------- */
+var pendingDay = null;
+function renderStrip(){
+  var strip = document.getElementById("daystrip");
+  var h = "";
+  for(var i=0;i<14;i++){
+    var d = addDays(today, i);
+    var s = iso(d);
+    var taken = S.planned.indexOf(s) >= 0;
+    var blocked = blockedReason(d);
+    var opp = opportunity(d);
+    var cls = "day" + (taken?" taken":"") + (blocked?" blocked":"");
+    h += '<button class="'+cls+'" data-day="'+s+'" '+((taken||blocked)?'disabled':'')+
+         ' title="'+(blocked||"")+'"'+
+         ' aria-pressed="'+(pendingDay===s)+'">'+
+         '<span class="dw">'+(i===0?"Bugün":i===1?"Yarın":TR_DAY[d.getDay()])+'</span>'+
+         '<span class="dd">'+d.getDate()+'</span>'+
+         (!blocked && opp ? (opp.k==="bid"
+            ? '<span class="bid"></span>'
+            : '<span class="mark"></span>') : '')+
+         '</button>';
+  }
+  strip.innerHTML = h;
+
+  /* blocked day explanation, if any in range */
+  var note = document.getElementById("strip-note");
+  var firstBlocked = null;
+  for(var j=0;j<14;j++){
+    var bd = addDays(today,j), br = blockedReason(bd);
+    if(br){ firstBlocked = {d:bd, r:br}; break; }
+  }
+  note.innerHTML = firstBlocked
+    ? '<span style="width:5px;height:5px;border-radius:50%;background:var(--ink-3);flex:0 0 auto;margin-top:6px"></span>'+
+      '<span><b>'+firstBlocked.d.getDate()+' '+TR_MONTH[firstBlocked.d.getMonth()]+'</b> seçilemiyor: '+firstBlocked.r+'.</span>'
+    : '<span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex:0 0 auto;margin-top:6px"></span>'+
+      '<span>İşaretli günler, birçok kişinin tercih ettiği günler. Seçtiğin gün <b>kaza orucu</b> olarak sayılır.</span>';
+
+  renderOpps();
+  document.getElementById("confirm-plan").disabled = !pendingDay;
+}
+
+function renderOpps(){
+  var out = [], seen = {};
+  for(var i=1;i<=45 && out.length<3;i++){
+    var d = addDays(today,i);
+    if(blockedReason(d)) continue;
+    if(S.planned.indexOf(iso(d))>=0) continue;
+    var o = opportunity(d); if(!o) continue;
+    if(o.k==="wk" && seen.wk) continue;
+    if(o.k==="bid" && seen.bid) continue;
+    seen[o.k] = true;
+    out.push({d:d, o:o, n:namedDay(d)});
+  }
+  document.getElementById("opp-list").innerHTML = out.map(function(x){
+    return '<div class="opp">'+
+      '<span class="dt"><b>'+x.d.getDate()+'</b><span>'+TR_MONTH[x.d.getMonth()].slice(0,3)+'</span></span>'+
+      '<span class="tx"><b>'+x.o.l+'</b><span>'+TR_DAY[x.d.getDay()]+' · '+(x.n ? x.n : x.o.s)+'</span></span>'+
+      '<button class="why" data-why="'+x.o.k+'">Neden?</button>'+
+      '<button class="btn sm outline" style="padding:8px 13px;font-size:12.5px" data-pick="'+iso(x.d)+'">Seç</button>'+
+      '</div>';
+  }).join("") || '<div class="opp"><span class="tx"><span>Önümüzdeki haftalarda işaretli bir gün yok.</span></span></div>';
+}
+
+var WHY = {
+  wk: {
+    t:"Pazartesi ve perşembe",
+    b:"Bu iki gün, birçok kişinin oruç için tercih ettiği günlerdir. Uygulama bunu <b>yeni bir oruç önerisi</b> olarak değil, zaten tutman gereken kaza gününü yerleştirebileceğin bir zamanlama seçeneği olarak gösterir.",
+    g:null,
+    d:"Seçtiğin gün kaza orucu olarak sayılır. Bu günlerde tutulan kazanın ayrıca nafile sevabı olup olmadığı âlimler arasında ihtilaflıdır; uygulama bu soruya cevap vermez."
+  },
+  bid: {
+    t:"Eyyam-ı bîd",
+    b:"Her kamerî ayın 13, 14 ve 15. günleri. Bu günlerde oruç tutulmasına dair rivayetler Nesâî ve Tirmizî'de geçer ve <b>hasen–sahih</b> derecesindedir.",
+    g:"Hasen–sahih",
+    d:"Uygulama bu günleri nafile oruç daveti olarak değil, kaza gününü yerleştirme seçeneği olarak işaretler. Niyet birleştirme konusu ihtilaflıdır — güvendiğin bir âlime danış."
+  },
+  berat: {
+    t:"Berat Kandili · Şaban'ın 14/15. gecesi",
+    b:"Diyanet'in dinî günler takviminde yer alan beş kandilden biri. Türkiye'de bu günde oruç tutmak yaygın bir uygulamadır ve Hanefî geleneğinde <b>fezâil konusunda zayıf hadisle amel edilebileceği</b> kabul edilir.",
+    g:"İhtilaflı",
+    d:"Açık olmak gerekirse: 15 Şaban'da oruç tavsiye eden rivayet İbn Mâce'de geçer ve senedinde Ebû Bekr b. Ebî Sebre bulunduğu için hadis âlimlerinin çoğunluğunca <b>zayıf</b> sayılmıştır. Bir kısım âlim bu gün için özel bir oruç sünnetinin sabit olmadığı görüşündedir. Bu öneri Diyanet takvimi seçili olduğu için gösteriliyor — Ümmü'l-Kurâ takvimine geçersen kandil önerileri kapanır."
+  },
+  asure: {
+    t:"Aşure Günü · 10 Muharrem",
+    b:"Bu günde oruç tutulmasına dair rivayet <b>Müslim'de</b> geçer ve sahihtir. Türkiye'de yaygın olarak tutulur.",
+    g:"Sahih",
+    d:"Seçtiğin gün kaza orucu olarak sayılır. Kazanın ayrıca nafile sevabı olup olmadığı (niyet birleştirme) ihtilaflıdır."
+  },
+  arefe: {
+    t:"Arefe Günü · 9 Zilhicce",
+    b:"Hacda olmayanlar için bu günde oruç tutulmasına dair rivayet <b>Müslim'de</b> geçer ve sahihtir.",
+    g:"Sahih",
+    d:"Kurban Bayramı'nın kendisinde ve teşrik günlerinde oruç tutulmaz — o günler takvimde seçilemez."
+  }
+};
+
+function openWhy(k){
+  var w = WHY[k]; if(!w) return;
+  document.getElementById("why-body").innerHTML =
+    '<div class="between"><h3 class="display sm">'+w.t+'</h3>'+
+      (w.g ? '<span class="grade '+(w.g==="İhtilaflı"?"zayif":"sahih")+'">'+w.g+'</span>' : '')+
+    '</div>'+
+    '<p class="tiny" style="line-height:1.65;color:var(--ink-2)">'+w.b+'</p>'+
+    '<p class="disclaim">'+w.d+'</p>'+
+    '<button class="btn outline" data-go="sources">Tüm kaynaklar</button>'+
+    '<button class="btn ghost sm" style="width:100%" data-close>Kapat</button>';
+  document.getElementById("sheet-why").classList.add("on");
+}
+
+/* ---------------- seasonal context ---------------- */
+function renderSeason(){
+  var slot = document.getElementById("season-slot");
+  var left = S.total - S.done;
+  var h = hijriParts(today);
+  var inShaban = h && h.m===7;
+  var lastCall = daysToRamadan > 0 && daysToRamadan <= 25;
+
+  if(left<=0){ slot.innerHTML=""; return; }
+
+  if(lastCall){
+    slot.innerHTML =
+      '<div class="season">'+
+        '<div class="hd"><span class="dot"></span><b>Son çağrı</b></div>'+
+        '<p style="font-family:var(--font-display);font-size:20px;line-height:1.3;margin:0">'+
+          'Ramazan\'a '+daysToRamadan+' gün kaldı, '+left+' günün var.</p>'+
+        '<p class="tiny" style="line-height:1.6">Bu, kazayı tamamlamak için son aralık. Haftada '+
+          Math.ceil(left/Math.max(1,Math.floor(daysToRamadan/7)))+' gün yeterli.</p>'+
+        '<div class="srcbox" style="margin-top:4px">'+
+          '<p class="tr">“Üzerimde Ramazan\'dan oruç borcu olurdu da onu ancak Şaban\'da kaza edebilirdim.”</p>'+
+          '<p class="cite">Hz. Âişe (r.a.) · Buhârî 1950 · Müslim 1146</p>'+
+        '</div>'+
+        '<button class="btn sm" style="width:100%;margin-top:6px" data-sheet="plan">Kalan günleri yerleştir</button>'+
+      '</div>';
+    return;
+  }
+
+  if(inShaban){
+    slot.innerHTML =
+      '<div class="card flat" style="display:flex;flex-direction:column;gap:8px">'+
+        '<span class="eyebrow">Şaban ayı</span>'+
+        '<p class="tiny" style="line-height:1.6;color:var(--ink-2)">Ramazan\'a '+daysToRamadan+
+        ' gün var. Kalan '+left+' günü bu aya yaymak için hâlâ rahat bir alan var.</p>'+
+      '</div>';
+    return;
+  }
+
+  slot.innerHTML = "";
+}
+
+/* ---------------- sheets & moments ---------------- */
+function openSheet(id){
+  pendingDay = null;
+  if(id==="plan") renderStrip();
+  document.getElementById("sheet-"+id).classList.add("on");
+}
+function closeSheets(){
+  document.querySelectorAll(".sheet-scrim").forEach(function(s){ s.classList.remove("on"); });
+}
+
+function completeDay(){
+  S.done = Math.min(S.total, S.done + 1);
+  var todayIso = iso(today);
+  var idx = S.planned.indexOf(todayIso);
+  if(idx>=0) S.planned.splice(idx,1);
+  var left = S.total - S.done;
+  save();
+  render();
+  if(left <= 0){
+    document.getElementById("moment-done").classList.add("on");
+  } else {
+    document.getElementById("moment-sub").textContent =
+      "Kalan " + left + " gün. Acelesi yok.";
+    document.getElementById("moment").classList.add("on");
+  }
+}
+
+/* ---------------- events ---------------- */
+document.addEventListener("click", function(e){
+  var t = e.target.closest("[data-go],[data-sheet],[data-close],[data-set],[data-pace],[data-day],[data-say],[data-why],[data-pick]");
+
+  if(e.target.closest("#demo-shaban")){
+    demoShaban = !demoShaban;
+    setToday(demoShaban ? addDays(RAMADAN, -18) : realToday);
+    document.getElementById("demo-shaban").textContent = demoShaban ? "⟳ Bugüne dön" : "⟳ Şaban'a atla";
+    document.getElementById("pd").textContent =
+      today.getDate()+" "+TR_MONTH[today.getMonth()]+" "+today.getFullYear()+
+      " · Ramazan'a "+daysToRamadan+" gün"+(demoShaban?" (simülasyon)":"");
+    go("today"); return;
+  }
+
+  if(e.target.closest("#minus")){ S.total = Math.max(1, S.total-1); render(); return; }
+  if(e.target.closest("#plus")){ S.total = Math.min(120, S.total+1); render(); return; }
+  if(e.target.closest("#unsure")){
+    var box = document.getElementById("unsure-box");
+    box.hidden = !box.hidden;
+    return;
+  }
+  if(e.target.closest("#complete-btn")){ completeDay(); return; }
+  if(e.target.closest("#cancel-plan")){
+    var np = nextPlanned();
+    if(np){ var i = S.planned.indexOf(iso(np)); if(i>=0) S.planned.splice(i,1); }
+    render(); return;
+  }
+  if(e.target.closest("#confirm-plan")){
+    if(pendingDay){ S.planned.push(pendingDay); S.planned.sort(); }
+    closeSheets(); go("today"); return;
+  }
+  if(e.target.closest("#moment-close")){ document.getElementById("moment").classList.remove("on"); return; }
+  if(e.target.closest("#done-close")){ document.getElementById("moment-done").classList.remove("on"); go("journey"); return; }
+  if(e.target.closest("#done-close2")){ document.getElementById("moment-done").classList.remove("on"); return; }
+  if(e.target.closest("#join-tomorrow")){
+    S.joinedTomorrow = !S.joinedTomorrow;
+    var b = document.getElementById("join-tomorrow");
+    b.textContent = S.joinedTomorrow ? "Yarın için işaretlendi ✓" : "Ben de varım";
+    b.classList.toggle("amber", S.joinedTomorrow);
+    b.classList.toggle("outline", !S.joinedTomorrow);
+    if(S.joinedTomorrow){
+      var tom = iso(addDays(today,1));
+      if(S.planned.indexOf(tom)<0){ S.planned.push(tom); S.planned.sort(); }
+    }
+    save(); render(); return;
+  }
+  if(e.target.closest("#reset")){
+    S = Object.assign({}, DEFAULT); S.planned = [];
+    save(); closeSheets();
+    document.querySelectorAll(".moment").forEach(function(m){ m.classList.remove("on"); });
+    go("welcome"); return;
+  }
+  if(e.target.closest(".sheet-scrim") && !e.target.closest(".sheet")){ closeSheets(); return; }
+  if(e.target.closest("#goal-seg")){
+    var btn = e.target.closest("#goal-seg button");
+    if(btn){
+      document.querySelectorAll("#goal-seg button").forEach(function(b){ b.setAttribute("aria-pressed","false"); });
+      btn.setAttribute("aria-pressed","true");
+      S.goal = parseInt(btn.textContent,10) || 3;
+      save(); render();
+    }
+    return;
+  }
+
+  if(!t) return;
+
+  if(t.dataset.go){ closeSheets(); go(t.dataset.go); return; }
+  if(t.dataset.sheet){ openSheet(t.dataset.sheet); return; }
+  if(t.hasAttribute("data-close")){ closeSheets(); return; }
+  if(t.dataset.set){ S.total = +t.dataset.set; render(); return; }
+  if(t.dataset.pace){ S.paceIdx = +t.dataset.pace; render(); return; }
+  if(t.dataset.day){ pendingDay = t.dataset.day; renderStrip(); return; }
+  if(t.dataset.pick){
+    if(S.planned.indexOf(t.dataset.pick)<0){ S.planned.push(t.dataset.pick); S.planned.sort(); }
+    closeSheets(); go("today"); return;
+  }
+  if(t.dataset.why){ openWhy(t.dataset.why); return; }
+  if(t.dataset.cal){
+    S.calSource = t.dataset.cal;
+    save(); render();
+    document.querySelectorAll("[data-cal]").forEach(function(b){
+      b.setAttribute("aria-pressed", b.dataset.cal===S.calSource ? "true":"false");
+    });
+    return;
+  }
+  if(t.dataset.say){
+    document.querySelectorAll("[data-say]").forEach(function(b){ b.setAttribute("aria-pressed","false"); });
+    t.setAttribute("aria-pressed","true");
+    return;
+  }
+});
+
+/* clock */
+(function tick(){
+  var n = new Date();
+  document.getElementById("clock").textContent = n.getHours()+":"+pad(n.getMinutes());
+  setTimeout(tick, 20000);
+})();
+
+document.getElementById("pd").textContent =
+  today.getDate()+" "+TR_MONTH[today.getMonth()]+" "+today.getFullYear()+" · Ramazan'a "+daysToRamadan+" gün";
+
+go("welcome");
+})();
+</script>
