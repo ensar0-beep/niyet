@@ -1,4 +1,6 @@
 <title>Niyet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#1B1D33">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -231,6 +233,13 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 .privacy{display:flex;gap:10px;align-items:flex-start;padding:14px 15px;border-radius:14px;border:1px dashed var(--line)}
 .privacy svg{width:16px;height:16px;stroke:var(--ink-3);fill:none;stroke-width:1.6;flex:0 0 auto;margin-top:2px}
 
+.install{display:flex;gap:12px;align-items:flex-start;padding:15px 16px;border-radius:16px;background:var(--plan-soft);border:1px solid transparent}
+.install svg{width:18px;height:18px;stroke:var(--plan);fill:none;stroke-width:1.7;flex:0 0 auto;margin-top:1px}
+.install .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.install .tx b{font-size:13.5px;font-weight:700}
+.install .tx p{margin:0;font-size:12.5px;line-height:1.5;color:var(--ink-2)}
+.install .x{flex:0 0 auto;color:var(--ink-3);font-size:18px;line-height:1;padding:2px}
+
 /* ---------- Sheets & moments ---------- */
 .sheet-scrim{position:absolute;inset:0;background:rgba(16,18,35,.42);backdrop-filter:blur(3px);z-index:70;display:none;align-items:flex-end}
 .sheet-scrim.on{display:flex;animation:fade .26s ease both}
@@ -342,6 +351,7 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
         </button>
       </div>
       <div class="screen-body pad" style="display:flex;flex-direction:column;gap:16px">
+        <div id="install-slot"></div>
         <div class="hero-next" id="hero"></div>
         <div id="season-slot"></div>
 
@@ -665,7 +675,7 @@ var WHY = {
 
 /* ═════════════════════ durum ═════════════════════ */
 var DEFAULT = { total:7, done:0, planned:[], goal:3, paceIdx:1, calSource:"diyanet",
-  onboarded:false, notified:false, lastNotifiedFor:null, editingCount:false };
+  onboarded:false, notified:false, lastNotifiedFor:null, editingCount:false, installDismissed:false };
 var S = load();
 function load(){
   try{ var raw=localStorage.getItem("niyet-state"); if(raw) return Object.assign({},DEFAULT,JSON.parse(raw)); }
@@ -834,6 +844,42 @@ function openWhy(k){
   document.getElementById("sheet-why").classList.add("on");
 }
 
+/* ═════════════════════ kurulum durumu ═════════════════════
+   Veri yalnızca localStorage'da tutuluyor. Ana ekrana eklenmemiş bir
+   Safali sekmesinde iOS, 7 gün etkileşimsiz kalan sitelerin script-yazılabilir
+   depolamasını (localStorage dahil) otomatik siliyor (ITP). Ana ekrana eklenmiş
+   bir uygulama Safari'nin bu sayacından bağımsız kendi kullanım sayacına sahip
+   ve bu silinmeden muaf tutuluyor. Kısacası: kurulum burada bir tercih değil,
+   verinin aylarca hayatta kalması için gereken şart. */
+var deferredInstall = null;
+window.addEventListener("beforeinstallprompt", function(e){ e.preventDefault(); deferredInstall = e; render(); });
+window.addEventListener("appinstalled", function(){ deferredInstall = null; render(); });
+
+function isStandalone(){
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+}
+var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+
+function renderInstall(){
+  var slot = document.getElementById("install-slot");
+  if(!slot) return;
+  if(isStandalone() || S.installDismissed){ slot.innerHTML=""; return; }
+
+  var body, cta = "";
+  if(deferredInstall){
+    body = "Verilerin bu cihazda kalıcı olsun diye uygulamayı kurman gerekiyor — sadece birkaç saniye.";
+    cta = '<button class="btn sm" style="margin-top:2px" id="install-go">Uygulamayı yükle</button>';
+  }else if(isIOS){
+    body = "Verilerin aylarca kalıcı olsun diye: paylaş simgesine dokun, sonra <b>Ana Ekrana Ekle</b>'yi seç.";
+  }else{
+    body = "Verilerin kalıcı olsun diye tarayıcı menüsünden <b>Ana ekrana ekle</b> / <b>Yükle</b> seçeneğini kullan.";
+  }
+  slot.innerHTML =
+    '<div class="install"><svg viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2"/></svg>'+
+    '<div class="tx"><b>Ana ekrana ekle</b><p>'+body+'</p>'+cta+'</div>'+
+    '<button class="x" id="install-dismiss" aria-label="Kapat">×</button></div>';
+}
+
 /* ═════════════════════ bildirim (best-effort, gerçek push değil) ═════════════════════ */
 var swReady = null;
 function initNotifications(){
@@ -890,7 +936,7 @@ function render(){
   var ht=hijriParts(today);
   document.getElementById("today-greet").textContent = today.getDate()+" "+TR_MONTH[today.getMonth()];
   document.getElementById("today-hijri").textContent = (ht? ht.d+" "+HMONTH[ht.m]+" "+ht.y : "") + (namedDay(today)?" · "+namedDay(today):"");
-  renderHero(); renderSeason();
+  renderHero(); renderSeason(); renderInstall();
 
   document.getElementById("remaining-num").textContent = left+" gün";
   document.getElementById("remaining-note").textContent = "Başlangıç: "+S.total;
@@ -960,6 +1006,8 @@ document.addEventListener("click", function(e){
   }
   if(e.target.closest("#edit-count-btn")){ S.editingCount=true; save(); closeSheets(); go("count"); return; }
   if(e.target.closest("#notif-btn")){ requestNotifPermission(); return; }
+  if(e.target.closest("#install-go")){ if(deferredInstall){ deferredInstall.prompt(); deferredInstall.userChoice.then(function(){ deferredInstall=null; render(); }); } return; }
+  if(e.target.closest("#install-dismiss")){ S.installDismissed=true; save(); render(); return; }
   if(e.target.closest("#reset-app")){ closeSheets(); document.getElementById("sheet-confirm-reset").classList.add("on"); return; }
   if(e.target.closest("#confirm-reset-yes")){
     try{ localStorage.removeItem("niyet-state"); }catch(err){}
