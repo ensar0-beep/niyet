@@ -306,6 +306,7 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
           <span class="big num" id="countval">7</span>
           <button class="pm" id="plus" aria-label="Artır">+</button>
         </div>
+        <p class="tiny" id="count-floor-note" style="text-align:center" hidden></p>
         <div class="stack" style="gap:12px">
           <button class="btn ghost sm" id="unsure" style="width:100%;justify-content:flex-start;padding-left:0">Tam olarak bilmiyorum →</button>
           <div id="unsure-box" hidden class="card flat" style="display:flex;flex-direction:column;gap:13px">
@@ -339,7 +340,8 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 
     <!-- ══════════════ READY ══════════════ -->
     <section class="screen" id="s-ready">
-      <div class="screen-body pad" style="display:flex;flex-direction:column;justify-content:center;gap:28px;padding-top:calc(30px + env(safe-area-inset-top))">
+      <div class="apphead"><button class="btn ghost sm" data-go="pace" style="padding-left:0">← Geri</button></div>
+      <div class="screen-body pad" style="display:flex;flex-direction:column;justify-content:center;gap:28px">
         <div class="stack" style="gap:16px">
           <span class="eyebrow">Planın hazır</span>
           <h2 class="display" id="ready-head">7 gün, 4 aya yayıldı.</h2>
@@ -499,6 +501,11 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
             <span class="tx"><b>Gün sayımı güncelle</b><span id="settings-count-sub">7 gün</span></span>
             <span class="ch">›</span>
           </button>
+          <button class="list-row" data-sheet="goal" style="width:100%">
+            <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 21V4M4 4h13l-2.5 3.5L17 11H4"/></svg></span>
+            <span class="tx"><b>Aylık niyet</b><span id="settings-goal-sub">Bu ay 3 gün</span></span>
+            <span class="ch">›</span>
+          </button>
           <button class="list-row" id="notif-btn" style="width:100%">
             <span class="ic"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></span>
             <span class="tx"><b>Bildirimler</b><span id="notif-sub">Kapalı</span></span>
@@ -528,6 +535,20 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
           </div>
           <button class="btn" id="confirm-plan" disabled>Bu günü planla</button>
           <button class="btn ghost sm" style="width:100%" data-close>Vazgeç</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════ SHEET: MONTHLY GOAL ══════════════ -->
+    <div class="sheet-scrim" id="sheet-goal">
+      <div class="sheet">
+        <div class="grab"></div>
+        <div class="pad stack" style="gap:18px">
+          <div class="stack" style="gap:6px"><h3 class="display sm">Bu ay için niyetin</h3><p class="tiny">Bir taahhüt değil, sana uyan bir hedef. İstediğin an değiştir.</p></div>
+          <div class="seg" id="goal-seg">
+            <button data-goal="1">1</button><button data-goal="2">2</button><button data-goal="3">3</button><button data-goal="5">5</button><button data-goal="7">7</button>
+          </div>
+          <button class="btn ghost sm" style="width:100%" data-close>Kapat</button>
         </div>
       </div>
     </div>
@@ -852,6 +873,12 @@ function renderHero(){
       : '<button class="btn sm outline" style="width:100%;margin-top:16px" id="cancel-plan">Bu günü kaldır</button>');
 }
 
+/* S.planned yalnızca "gelecek veya henüz cevapsız" günleri tutar — bir gün
+   "Tamamladım" ile ya da geriye dönük olarak yanıtlandığında dizden çıkar.
+   Yani dizide olup tarihi geçmiş bir gün, ASLA otomatik "tamamlandı" sayılamaz —
+   bu, kullanıcının hiç onaylamadığı bir şeyi onaylanmış gibi göstermek olur.
+   Böyle günler ayrı bir "yanıt bekliyor" durumunda gösterilir ve geriye dönük
+   yanıtlanabilir. */
 function renderMonths(){
   var wrap=document.getElementById("j-months"); var byMonth={};
   S.planned.forEach(function(s){ var d=fromIso(s); var k=d.getFullYear()+"-"+d.getMonth(); (byMonth[k]=byMonth[k]||[]).push(d); });
@@ -861,9 +888,20 @@ function renderMonths(){
     var arr=byMonth[k].sort(function(a,b){return a-b;}); var d0=arr[0];
     return '<div class="monthblock card flat"><div class="mh"><span class="mn">'+TR_MONTH[d0.getMonth()]+' '+d0.getFullYear()+'</span><span class="mc">'+arr.length+' GÜN</span></div>'+
       '<div class="stack" style="gap:0">'+arr.map(function(d){
-        var past=d<today;
-        return '<div class="row" style="padding:9px 0;border-top:1px solid var(--line-2)"><span class="node '+(past?"done":"planned")+'" style="width:11px;height:11px"></span>'+
-          '<span style="font-size:14px;font-weight:600;flex:1">'+TR_DAY[d.getDay()]+', '+d.getDate()+' '+TR_MONTH[d.getMonth()]+'</span><span class="tiny">'+(past?"tamamlandı":"planlı")+'</span></div>';
+        var iso_ = iso(d);
+        var past = d.getTime() < today.getTime();
+        if(!past){
+          return '<div class="row" style="padding:9px 0;border-top:1px solid var(--line-2)"><span class="node planned" style="width:11px;height:11px"></span>'+
+            '<span style="font-size:14px;font-weight:600;flex:1">'+TR_DAY[d.getDay()]+', '+d.getDate()+' '+TR_MONTH[d.getMonth()]+'</span><span class="tiny">planlı</span></div>';
+        }
+        return '<div class="row" style="padding:9px 0;border-top:1px solid var(--line-2);flex-wrap:wrap">'+
+          '<span class="node" style="width:11px;height:11px;border-style:dashed;border-color:var(--ink-3)"></span>'+
+          '<span style="font-size:14px;font-weight:600;flex:1">'+TR_DAY[d.getDay()]+', '+d.getDate()+' '+TR_MONTH[d.getMonth()]+'</span>'+
+          '<span class="tiny" style="flex:0 0 100%;padding:6px 0 2px 21px">Bu günü tuttun mu?</span>'+
+          '<span style="flex:0 0 auto;padding-left:21px;display:flex;gap:8px">'+
+            '<button class="btn sm outline" style="padding:7px 12px;font-size:12px" data-resolve="done" data-date="'+iso_+'">Tuttum</button>'+
+            '<button class="btn ghost sm" style="padding:7px 12px;font-size:12px" data-resolve="skip" data-date="'+iso_+'">Boş geçti</button>'+
+          '</span></div>';
       }).join("")+'</div></div>';
   }).join("");
 }
@@ -1013,6 +1051,9 @@ function render(){
   document.getElementById("count-step").textContent = S.editingCount ? "Ayarlar" : "Adım 1 / 2";
   document.getElementById("count-continue").textContent = S.editingCount ? "Kaydet" : "Devam";
   document.getElementById("count-back").style.visibility = S.editingCount ? "visible" : "hidden";
+  var floorNote = document.getElementById("count-floor-note");
+  floorNote.hidden = !(S.editingCount && S.done>0);
+  if(!floorNote.hidden) floorNote.textContent = "Zaten "+S.done+" gün tamamladığın için bunun altına inemezsin.";
 
   document.getElementById("welcome-field").innerHTML = fieldHTML(7,2,1,"lg");
   renderPace();
@@ -1045,6 +1086,8 @@ function render(){
 
   document.getElementById("settings-cal-sub").textContent = S.calSource==="diyanet" ? "Diyanet" : "Ümmü'l-Kurâ";
   document.getElementById("settings-count-sub").textContent = S.total+" gün";
+  document.getElementById("settings-goal-sub").textContent = "Bu ay "+S.goal+" gün";
+  document.querySelectorAll("#goal-seg button").forEach(function(b){ b.setAttribute("aria-pressed", (+b.dataset.goal===S.goal)?"true":"false"); });
   document.getElementById("notif-sub").textContent = notifPermissionLabel();
   document.querySelectorAll("[data-cal]").forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.cal===S.calSource ? "true":"false"); });
 
@@ -1055,10 +1098,18 @@ function render(){
 function openSheet(id){ if(id==="plan"){ pendingDay=null; renderStrip(); } document.getElementById("sheet-"+id).classList.add("on"); }
 function closeSheets(){ document.querySelectorAll(".sheet-scrim").forEach(function(s){ s.classList.remove("on"); }); }
 
+/* Tek gerçek kaynak: bir gün ya S.planned içinde "cevapsız" bekler,
+   ya da burada çözülüp diziden çıkar. completeDay() (bugünkü kahraman
+   kartından) ve geçmişteki bir günü geriye dönük yanıtlama aynı yolu kullanır. */
+function resolvePlanned(dateIso, completed){
+  var idx = S.planned.indexOf(dateIso); if(idx>=0) S.planned.splice(idx,1);
+  if(completed) S.done = Math.min(S.total, S.done+1);
+  save(); render();
+  return S.total - S.done;
+}
+
 function completeDay(){
-  S.done = Math.min(S.total, S.done+1);
-  var t = iso(today); var idx = S.planned.indexOf(t); if(idx>=0) S.planned.splice(idx,1);
-  var left = S.total-S.done; save(); render();
+  var left = resolvePlanned(iso(today), true);
   if(left<=0){
     document.getElementById("done-sub").textContent = "Bu yıl için kaza orucun kalmadı. Ramazan'a "+daysToRamadan+" gün var — bu sefer hafif gireceksin.";
     document.getElementById("moment-done").classList.add("on");
@@ -1070,12 +1121,14 @@ function completeDay(){
 
 /* ═════════════════════ olaylar ═════════════════════ */
 document.addEventListener("click", function(e){
-  var t = e.target.closest("[data-go],[data-sheet],[data-close],[data-set],[data-pace],[data-day],[data-why],[data-pick],[data-cal]");
+  var t = e.target.closest("[data-go],[data-sheet],[data-close],[data-set],[data-pace],[data-day],[data-why],[data-pick],[data-cal],[data-goal]");
 
-  if(e.target.closest("#minus")){ S.total=Math.max(1,S.total-1); render(); return; }
+  if(e.target.closest("#minus")){ var floor=S.editingCount?Math.max(1,S.done):1; S.total=Math.max(floor,S.total-1); render(); return; }
   if(e.target.closest("#plus")){ S.total=Math.min(120,S.total+1); render(); return; }
   if(e.target.closest("#unsure")){ var box=document.getElementById("unsure-box"); box.hidden=!box.hidden; return; }
   if(e.target.closest("#complete-btn")){ completeDay(); return; }
+  var resolveBtn = e.target.closest("[data-resolve]");
+  if(resolveBtn){ resolvePlanned(resolveBtn.dataset.date, resolveBtn.dataset.resolve==="done"); return; }
   if(e.target.closest("#cancel-plan")){
     var np=nextPlanned(); if(np){ var i=S.planned.indexOf(iso(np)); if(i>=0) S.planned.splice(i,1); }
     save(); render(); return;
@@ -1111,12 +1164,13 @@ document.addEventListener("click", function(e){
   if(t.dataset.go){ if(t.dataset.go==="ready") S.onboarded=true; closeSheets(); go(t.dataset.go); return; }
   if(t.dataset.sheet){ openSheet(t.dataset.sheet); return; }
   if(t.hasAttribute("data-close")){ closeSheets(); return; }
-  if(t.dataset.set){ S.total=+t.dataset.set; render(); return; }
+  if(t.dataset.set){ var f=S.editingCount?Math.max(1,S.done):1; S.total=Math.max(f,+t.dataset.set); render(); return; }
   if(t.dataset.pace){ S.paceIdx=+t.dataset.pace; render(); return; }
   if(t.dataset.day){ pendingDay=t.dataset.day; renderStrip(); return; }
   if(t.dataset.pick){ if(S.planned.indexOf(t.dataset.pick)<0){ S.planned.push(t.dataset.pick); S.planned.sort(); save(); requestNotifPermission(); } closeSheets(); go("today"); return; }
   if(t.dataset.why){ openWhy(t.dataset.why); return; }
   if(t.dataset.cal){ S.calSource=t.dataset.cal; save(); render(); return; }
+  if(t.dataset.goal){ S.goal=+t.dataset.goal; save(); render(); return; }
 });
 
 /* ═════════════════════ başlangıç ═════════════════════ */
